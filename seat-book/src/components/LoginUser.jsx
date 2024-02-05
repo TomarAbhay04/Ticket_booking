@@ -1,33 +1,20 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Form, Alert } from "react-bootstrap";
-import { Button } from "react-bootstrap";
+import { Button} from "react-bootstrap";
 import GoogleButton from "react-google-button";
 import { useUserAuth } from "../context/UserAuthContext";
+import PhoneSignUp from './PhoneSignup.jsx';
+// import '../styles/Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  // const { logIn, googleSignIn } = useUserAuth();
+  const { googleSignIn } = useUserAuth();
   const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await logIn(email, password);
-      navigate("/home");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
 
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
       await googleSignIn();
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.log(error.message);
     }
@@ -36,53 +23,23 @@ const Login = () => {
   return (
     <>
       <div className="p-4 box">
-        <h2 className="mb-3">Firebase Auth Login</h2>
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Control
-              type="email"
-              placeholder="Email address"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-
-          <div className="d-grid gap-2">
-            <Button variant="primary" type="Submit">
-              Log In
-            </Button>
-          </div>
-        </Form>
+        <h2 className="mb-3 text-center text-2xl"> Please Login</h2>
         <hr />
-        <div>
+        <div className="flex  justify-center">
           <GoogleButton
-            className="g-btn"
+            className="g-btn "
             type="dark"
             onClick={handleGoogleSignIn}
           />
         </div>
         <hr />
-        <Link to='/phonesignup' style={{ textDecoration: 'none' }}>
-        <div className="d-grid gap-2 mt-3">
-            <Button variant="success" type="Submit">
-              Sign in with phone 
-            </Button>
-          </div>
-          </Link>
+        
       </div>
-      <div className="p-4 box mt-3 text-center">
-        Don't have an account? <Link to="/signup" style={{ textDecoration: 'none' }}>Sign up</Link>
-      </div>
+      <PhoneSignUp />
+     
     </>
   );
 };
+
 
 export default Login;

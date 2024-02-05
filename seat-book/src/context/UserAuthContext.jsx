@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState} from "react";
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  // createUserWithEmailAndPassword,
+  // signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
   GoogleAuthProvider,
@@ -16,12 +16,12 @@ const userAuthContext = createContext();
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({});
 
-  function logIn(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
-  }
-  function signUp(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
-  }
+  // function logIn(email, password) {
+  //   return signInWithEmailAndPassword(auth, email, password);
+  // }
+  // function signUp(email, password) {
+  //   return createUserWithEmailAndPassword(auth, email, password);
+  // }
   function logOut() {
     return signOut(auth);
   }
@@ -32,9 +32,10 @@ export function UserAuthContextProvider({ children }) {
 
   function setUpRecaptcha(number){
     const recaptchaVerifier = new RecaptchaVerifier(
+      auth,
       'recaptcha-container',
      {},
-      auth
+      
     );
     recaptchaVerifier.render();
     return signInWithPhoneNumber(auth, number, recaptchaVerifier);
@@ -53,7 +54,7 @@ export function UserAuthContextProvider({ children }) {
 
   return (
     <userAuthContext.Provider
-      value={{ user, logIn, signUp, logOut, googleSignIn, setUpRecaptcha }}
+      value={{ googleSignIn, user, logOut, setUpRecaptcha }}
     >
       {children}
     </userAuthContext.Provider>
