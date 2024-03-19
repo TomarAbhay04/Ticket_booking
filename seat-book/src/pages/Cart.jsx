@@ -1,28 +1,14 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-// import { selectedSeats } from './Seat.jsx';
+
 
 const Cart = () => {
-  // Access the location object using useLocation
   const location = useLocation();
-  // const navigate = useNavigate();
-
-  // Access the selectedSeats from location state
   const seatsFromLocation = location.state?.selectedSeats || [];
-
-  // Check if selectedSeats is undefined or null
-  if (!seatsFromLocation) {
-    return <p>Your cart is empty. Please select seats to book.</p>;
-  }
-
-  // console.log(totalPayment);
-
   const totalPayment = seatsFromLocation.length * 150;
+
   const handlePayment = async () => {
-    // Redirect to the payment page
-    // navigate('/cart');
-    // navigate('/payment');
 
     try {
       // Check if totalPayment is a valid number
@@ -82,32 +68,28 @@ const Cart = () => {
     }
 
   };
+
+  const displaySeats = seatsFromLocation.map(seat => `${seat.seatRow}-${seat.seatNumber}`).join(', ');
+
   return (
-    <div className="cart-container flex justify-center">
-      <h1>Booking Cart</h1>
-      {seatsFromLocation.length === 0 ? (
-        <p>Your cart is empty. Please select seats to book.</p>
-      ) : (
-        <div>
-          <div className="cart-item">
-            <h2>Selected Seats:</h2>
-            <ul>
-              {seatsFromLocation.map((seatId) => (
-                <li key={seatId}>{seatId}</li>
-              ))}
-            </ul>
+    <div className="flex justify-center items-center h-full">
+      <div className="cart-container flex justify-center flex-col">
+        <h1 className='mb-4'>Booking Cart</h1>
+        {seatsFromLocation.length === 0 ? (
+          <p>Your cart is empty. Please select seats to book.</p>
+        ) : (
+          <div>
+            <div className="cart-item">
+              <h2>Your Seats: {displaySeats}</h2>
+            </div>
+            <div className="cart-summary">
+              <h3>Total Seats: {seatsFromLocation.length}</h3>
+              <h3>Total Price: Rs. {totalPayment}</h3>
+            </div>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded m-10" onClick={handlePayment}>Proceed to Checkout</button>
           </div>
-          <div className="cart-summary ">
-            <h3>Total Seats: {seatsFromLocation.length}</h3>
-            <h3>Total Price: Rs. {totalPayment}</h3>
-          </div>
-          {/* Add a button or a link to proceed to checkout */}
-          {/* <button className="checkout-button" onClick={handleCheckout}>
-            Proceed to Checkout
-          </button> */}
-          <button className="bg-blue-500 text-white px-4 py-2 rounded m-10" onClick={handlePayment}>Proceed to Checkout</button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

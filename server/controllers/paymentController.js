@@ -1,11 +1,19 @@
 import { instance } from "../server.js";
 // import crypto from "crypto";
-// import {Payment} from "../models/paymentModel.js";
+import {Payment} from "../models/paymentModel.js";
 
 
 export const checkout = async (req, res) => {
   try {
+    // console.log('checkout payload', req.body);
+    if (!req.body.totalPayment || typeof req.body.totalPayment !== 'number' || isNaN(req.body.totalPayment)) {
+      return res.status(400).json({
+          success: false,
+          error: 'Invalid totalPayment provided'
+      });
+  }
     const options = {
+      // amount: Number(req.body.totalPayment * 100),
       amount: Number(req.body.totalPayment * 100),
       currency: "INR",
     };
@@ -23,7 +31,7 @@ export const checkout = async (req, res) => {
     console.error('Error during checkout:', error);
     res.status(500).json({
       success: false,
-      error: 'Internal Server Error',
+      error: error.message,
     });
   }
 };
@@ -34,6 +42,30 @@ export const paymentVerification = async (req, res) => {
 
 const body = razorpay_order_id + "|" + razorpay_payment_id;
 console.log(body);
+
+const newPayment = new Payment({
+  razorpay_order_id,
+  razorpay_payment_id,
+  totalPayment: req.body.totalPayment,
+  // Add other fields as needed
+});
+
+try {
+  // Save the new Payment instance to the database
+  const savedPayment = await newPayment.save();
+
+  // Redirect to a success page or send a success response
+  res.redirect(
+    `http://localhost:5173/paymentsuccess?reference=${razorpay_payment_id}`
+  );
+} catch (error) {
+  // Log the error and send a failure response
+  console.error('Error saving payment:', error);
+  res.status(500).json({
+    success: false,
+    error: error.message,
+  });
+}
 
 // const expectedSignature = crypto
 //   .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
@@ -53,14 +85,17 @@ console.log(body);
 //     razorpay_signature,
 //   });
 
-  res.redirect(
-    `http://localhost:5173/paymentsuccess?reference=${razorpay_payment_id}`
-  );
+
+
+  // res.redirect(
+  //   `http://localhost:5173/paymentsuccess?reference=${razorpay_payment_id}`
+  // );
+
 // } else {
 //   res.status(400).json({
 //     success: false,
 //   });
-// }
+// }  
 
 
   };

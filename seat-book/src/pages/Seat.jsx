@@ -1,91 +1,183 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Cart from './Cart.jsx';
-
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function Seat() {
     const [selectedSeats, setSelectedSeats] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+    const [availableDates, setAvailableDates] = useState([]);
+    const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+    const [seatsData, setSeatsData] = useState([]);
+    const [hoveredSeat, setHoveredSeat] = useState(null);
+    const { movieId } = useParams();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchSeatsData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:4000/movies/${movieId}`);
+                const movie = response.data.movie
+                if (movie) {
+                    const availableTimeSlots = movie.availableSlots;
+                    const dates = availableTimeSlots.map(slot => slot.date);
+                    setAvailableDates(dates);
+                    setSelectedDate(dates[0]);
+                    const timeSlotsForSelectedDate = availableTimeSlots.find(slot => slot.date === dates[0]).timeSlots;
+                    const times = timeSlotsForSelectedDate.map(slot => slot.timeSlot);
+                    setAvailableTimeSlots(times);
+                    setSelectedTimeSlot(times[0]);
+                    const seatsForSelectedSlot = timeSlotsForSelectedDate.find(slot => slot.timeSlot === times[0]).seats;
+                    setSeatsData(seatsForSelectedSlot);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchSeatsData();
+    }, [movieId]);
+
+    const handleSelect = async (date, timeSlot = null) => {
+        setSelectedDate(date);
+        setSelectedTimeSlot(null);
+    
+        try {
+            const response = await axios.get(`http://localhost:4000/movies/${movieId}/timeslots/${date}`);
+            const timeSlots = response.data.timeSlots;
+    
+            if (timeSlots.length > 0) {
+                const times = timeSlots.map(slot => slot.timeSlot);
+                setAvailableTimeSlots(times);
+                setSelectedTimeSlot(timeSlot ? timeSlot : times[0]);
+    
+                const selectedTimeSlotData = timeSlot ? timeSlots.find(slot => slot.timeSlot === timeSlot) : timeSlots[0];
+                const seatsForSelectedSlot = selectedTimeSlotData.seats;
+                setSeatsData(seatsForSelectedSlot);
+            } else {
+                console.log("No time slots available for selected date.");
+            }
+        } catch (error) {
+            console.error('Error fetching time slots:', error);
+        }
+    };
+    
+    const handleDateSelect = async (date) => {
+        await handleSelect(date);
+    };
+    
+    const handleTimeSlotSelect = async (timeSlot) => {
+        await handleSelect(selectedDate, timeSlot);
+    };
+    
 
     const handleSeatClick = (seatId) => {
-        const isSelected = selectedSeats.includes(seatId);
-
-        setSelectedSeats((prevSelectedSeats) =>
-            isSelected
-                ? prevSelectedSeats.filter((seat) => seat !== seatId)
-                : [...prevSelectedSeats, seatId]
-        );
+        setSelectedSeats(prevSelectedSeats => {
+            if (prevSelectedSeats.includes(seatId)) {
+                return prevSelectedSeats.filter(seat => seat !== seatId);
+            } else {
+                return [...prevSelectedSeats, seatId];
+            }
+        });
+        // console.log();
     };
 
-
-
-    // ... (existing code)
-
     const handleCart = () => {
-        // Redirect to the payment page
-        // navigate('/cart');
-        navigate('/cart', { state: { selectedSeats } });
-        
+        const selectedSeatDetails = selectedSeats.map(seatId => {
+            return seatsData.find(seat => seat._id === seatId);
+        });
+        navigate('/cart', { state: { selectedSeats: selectedSeatDetails } });
+    };
+    
+    const handleSeatHover = (seatId) => {
+        setHoveredSeat(seatId); // Set the currently hovered seat ID
+    };
 
+    const handleSeatLeave = () => {
+        setHoveredSeat(null); // Reset the currently hovered seat ID
     };
 
     const renderSeats = () => {
-        const totalRows = 4; // Number of rows
-        const seatsPerRow = 10; // Number of seats in each row
-
-        const seats = [];
-
-        for (let i = 0; i < totalRows; i++) {
-            const rowSeats = [];
-            const seatRowId = String.fromCharCode(65 + i);
-            // Convert index to letter (A, B, C, ...)
-
-            rowSeats.push(
-                <div key={seatRowId} className="row-label text-lg font-bold p-2 m-1">
-                    {seatRowId}
-                </div>
-            );
-
-            for (let j = 0; j < seatsPerRow; j++) {
-                const fullSeatId = (j + 1); // Display seat numbers from 1 to 10
-
-                const isSelected = selectedSeats.includes(`${seatRowId}${fullSeatId}`);
-                // console.log(`${seatRowId}${fullSeatId}`);
-
-                rowSeats.push(
-                    <div
-                        key={fullSeatId}
-                        className={`seat ${isSelected ? 'bg-green-500' : 'bg-gray-200'} p-2 m-1 cursor-pointer`}
-                        style={{ width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                        onClick={() => handleSeatClick(`${seatRowId}${fullSeatId}`)}
-                    >
-                        {fullSeatId}
-                    </div>
-                );
-            }
-
-            seats.push(
-                <div key={seatRowId} className="flex flex-row items-center space-x-8 ">
-                    {rowSeats}
-                </div>
-            );
+        if (seatsData.length === 0) {
+            return <p>Loading...</p>;
         }
-
-        return seats;
+    
+        const seatsRows = [];
+        // const seatsPerRow = 10; // Number of seats per row
+        const rows = {}; // Object to group seats by row
+    
+        // Group seats by row
+        seatsData.forEach(seat => {
+            if (!rows[seat.seatRow]) {
+                rows[seat.seatRow] = [];
+            }
+            rows[seat.seatRow].push(seat);
+        });
+    
+        // Iterate through each row and render seat buttons
+        Object.keys(rows).forEach(row => {
+            const rowSeats = rows[row];
+            seatsRows.push(
+                <div key={row} className="flex justify-center mb-1">
+                    <div className="mr-8 font-medium items-center text-md text-gray-400 ">{row}</div> {/* Display row label */}
+                    {rowSeats.map(seat => (
+                        <button
+                            key={seat._id}
+                            className={`seat ${seat.available ? 'bg-gray-300 border-solid border-green-500' : 'bg-gray-300'} ${selectedSeats.includes(seat._id) ? 'bg-green-500' : ''} ${hoveredSeat === seat._id ? 'bg-green-500' : '' } w-7 h-7 mb-1 mx-2 p-2 rounded-md flex items-center justify-center text-xs text-green-800 `}
+                            disabled={!seat.available}
+                            onClick={() => handleSeatClick(seat._id)}
+                            onMouseEnter={() => handleSeatHover(seat._id)} // Add onMouseEnter event listener
+                            onMouseLeave={() => handleSeatLeave(seat._id)}
+                        >
+                            {seat.seatNumber}
+                        </button>
+                    ))}
+                </div>
+            );
+        });
+    
+        return seatsRows;
     };
-
-    // ... (existing code)
+    
 
     const totalPayment = selectedSeats.length * 150;
 
     return (
-
-        <>
+        <div className="container mx-auto mt-8">
+            <div className="flex justify-center">
+                <div className="mr-4">
+                    <h2 className="text-md font-semibold mb-2">Select Date:</h2>
+                    <div className="flex flex-wrap">
+                        {availableDates.map(date => (
+                            <button
+                                key={date}
+                                className={`bg-gray-200 px-3 py-1 rounded-full mr-2 mb-2 ${selectedDate === date ? 'bg-blue-500 text-white' : ''}`}
+                                onClick={() => handleDateSelect(date)}
+                            >
+                                {date}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <h2 className="text-md font-semibold mb-2">Select Time Slot:</h2>
+                    <div className="flex flex-wrap">
+                        {availableTimeSlots.map(timeSlot => (
+                            <button
+                                key={timeSlot}
+                                className={`bg-gray-200 px-3 py-1 rounded-full mr-2 mb-2 ${selectedTimeSlot === timeSlot ? 'bg-blue-500 text-white' : ''}`}
+                                onClick={() => handleTimeSlotSelect(timeSlot)}
+                            >
+                                {timeSlot}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
             <div className="container mx-auto mt-8 flex justify-center items-center">
                 <div className="screen mb-4"></div>
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-3">
                     {renderSeats()}
                 </div>
             </div>
@@ -97,12 +189,8 @@ function Seat() {
                     </button>
                 </div>
             )}
-
-        </>
-
+        </div>
     );
 }
-
-
 
 export default Seat;

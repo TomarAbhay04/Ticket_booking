@@ -69,7 +69,7 @@ const Navbar = () => {
           {user ? (
             // If user is authenticated, show user-specific content and a logout button
             <>
-              <span className="text-white">{user.email}</span>
+              <span className="text-white">{user.displayName}</span>
               <button className="text-white" onClick={logOut}>
                 Logout
               </button>

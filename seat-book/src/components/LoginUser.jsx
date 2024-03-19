@@ -24,15 +24,14 @@ const Login = () => {
     <>
       <div className="p-4 box">
         <h2 className="mb-3 text-center text-2xl"> Please Login</h2>
-        <hr />
-        <div className="flex  justify-center">
+
+        <div className="flex  justify-center ">
           <GoogleButton
             className="g-btn "
             type="dark"
             onClick={handleGoogleSignIn}
           />
         </div>
-        <hr />
         
       </div>
       <PhoneSignUp />

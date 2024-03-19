@@ -5,6 +5,11 @@ import 'react-phone-number-input/style.css';
 import { useUserAuth } from '../context/UserAuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
+// Tailwind CSS utility classes
+const primaryButtonClass = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800';
+const secondaryButtonClass = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800';
+const inputFieldClass = 'border border-blue-800 border-2 focus:border-blue-800 focus:outline-none';
+
 const PhoneSignUp = () => {
   const [number, setNumber] = useState('');
   const [otp, setOtp] = useState('');
@@ -52,16 +57,17 @@ const PhoneSignUp = () => {
               defaultCountry="IN"
               value={number}
               onChange={(value) => setNumber(value)}
-              placeholder="Enter Phone Number" className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-200 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ' 
+              placeholder="Enter Phone Number"
+              className={`${inputFieldClass} text-black bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-200 dark:hover:bg-black-700 focus:outline-none dark:focus:ring-blue-800`}
             />
             <div id="recaptcha-container"></div>
           </Form.Group>
           <div className="button-right ">
             <Link to="/">
-              <Button variant="secondary" className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'>Cancel</Button>
+              <Button variant="secondary" className={secondaryButtonClass}>Cancel</Button>
             </Link>{' '}
             &nbsp;
-            <Button variant="primary" className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' type="submit">
+            <Button variant="primary" className={primaryButtonClass} type="submit">
               Send OTP
             </Button>
           </div>
@@ -69,18 +75,22 @@ const PhoneSignUp = () => {
 
         <Form onSubmit={verifyOtp} style={{ display: flag ? 'block' : 'none ' }}>
           <Form.Group className="mb-3" controlId="formBasicotp">
-            <Form.Control
-              type="otp"
-              placeholder="Enter OTP"
-              onChange={(e) => setOtp(e.target.value)}
-            />
+            <div >
+              <Form.Control
+                type="otp"
+                placeholder="Enter OTP"
+                onChange={(e) => setOtp(e.target.value)}
+                className={inputFieldClass}
+              />
+            </div>
           </Form.Group>
-          <div className="button-right">
+          
+          <div className="button-right ">
             <Link to="/">
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="secondary" className={secondaryButtonClass}>Cancel</Button>
             </Link>{' '}
             &nbsp;
-            <Button variant="primary" type="submit">
+            <Button variant="primary" className={primaryButtonClass} type="submit">
               Verify OTP
             </Button>
           </div>
