@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Form, Alert } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { useUserAuth } from '../context/UserAuthContext';
-import { Link, useNavigate } from 'react-router-dom';
 
 // Tailwind CSS utility classes
-const primaryButtonClass = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800';
-const secondaryButtonClass = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800';
-const inputFieldClass = 'border border-blue-800 border-2 focus:border-blue-800 focus:outline-none';
+const primaryButtonClass = 'w-32 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 focus:outline-none dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700';
+const secondaryButtonClass = 'w-full text-gray-700 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 focus:outline-none dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700';
+const inputFieldClass = 'w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-500 dark:text-white';
 
 const PhoneSignUp = () => {
   const [number, setNumber] = useState('');
@@ -16,88 +16,91 @@ const PhoneSignUp = () => {
   const [error, setError] = useState('');
   const [flag, setFlag] = useState(false);
   const [confirmObj, setConfirmObj] = useState('');
-  const { setUpRecaptcha } = useUserAuth();
+  const { setUpRecaptcha } = useUserAuth(); // Added setUser to update user context
   const navigate = useNavigate();
 
   const getOtp = async (e) => {
     e.preventDefault();
     setError('');
-    if (number === '' || number === undefined) return setError('Please Enter a valid Number');
+    if (!number) {
+      setError('Please enter a valid number');
+      return;
+    }
     try {
       const response = await setUpRecaptcha(number);
-      console.log(response);
       setConfirmObj(response);
       setFlag(true);
     } catch (err) {
       setError(err.message);
     }
-    console.log(number);
   };
 
   const verifyOtp = async (e) => {
     e.preventDefault();
     setError('');
-    if (otp === '' || otp === undefined) return setError('Please Enter a valid OTP');
+    if (!otp) {
+      setError('Please enter a valid OTP');
+      return;
+    }
     try {
-      await confirmObj.confirm(otp);
+      const result = await confirmObj.confirm(otp);
+      // Update user context with displayName or phone number
+      // setUser({
+      //   ...result.user,
+      //   displayName: result.user.displayName || result.user.phoneNumber,
+      // });
       navigate('/');
     } catch (err) {
       setError(err.message);
     }
-    console.log(otp);
   };
 
   return (
-    <>
-      <div className="p-4 box flex justify-center">
-        {error && <Alert variant="danger">{error}</Alert>}
-        <Form onSubmit={getOtp} style={{ display: !flag ? 'flex' : 'none ' }}>
-          <Form.Group className="mb-3" controlId="formBasicPhoneNumber">
+    <div className="flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 space-y-4">
+        {error && <Alert variant="danger" className="mb-4">{error}</Alert>}
+        <h2 className="text-2xl font-semibold text-gray-700 dark:text-white text-center">Phone Number Verification</h2>
+
+        <form onSubmit={getOtp} className={`${!flag ? 'block' : 'hidden'}`}>
+          <div className="mb-4">
             <PhoneInput
               defaultCountry="IN"
               value={number}
-              onChange={(value) => setNumber(value)}
+              onChange={setNumber}
               placeholder="Enter Phone Number"
-              className={`${inputFieldClass} text-black bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-200 dark:hover:bg-black-700 focus:outline-none dark:focus:ring-blue-800`}
+              className={`${inputFieldClass} mb-4`}
             />
-            <div id="recaptcha-container"></div>
-          </Form.Group>
-          <div className="button-right ">
-            <Link to="/">
-              <Button variant="secondary" className={secondaryButtonClass}>Cancel</Button>
-            </Link>{' '}
-            &nbsp;
-            <Button variant="primary" className={primaryButtonClass} type="submit">
-              Send OTP
-            </Button>
+            <div id="recaptcha-container" className="mb-2"></div>
           </div>
-        </Form>
+          <div className="flex justify-between">
+            <Link to="/">
+              <button type="button" className={secondaryButtonClass}>Cancel</button>
+            </Link>
+            <button type="submit" className={primaryButtonClass}>Send OTP</button>
+          </div>
+        </form>
 
-        <Form onSubmit={verifyOtp} style={{ display: flag ? 'block' : 'none ' }}>
-          <Form.Group className="mb-3" controlId="formBasicotp">
-            <div >
-              <Form.Control
-                type="otp"
-                placeholder="Enter OTP"
-                onChange={(e) => setOtp(e.target.value)}
-                className={inputFieldClass}
-              />
-            </div>
-          </Form.Group>
-          
-          <div className="button-right ">
-            <Link to="/">
-              <Button variant="secondary" className={secondaryButtonClass}>Cancel</Button>
-            </Link>{' '}
-            &nbsp;
-            <Button variant="primary" className={primaryButtonClass} type="submit">
-              Verify OTP
-            </Button>
+        <form onSubmit={verifyOtp} className={`${flag ? 'block' : 'hidden'}`}>
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              className={`${inputFieldClass} mb-4`}
+            />
           </div>
-        </Form>
+          <div className="flex justify-between">
+            <Link to="/">
+              <button type="button" className={secondaryButtonClass}>Cancel</button>
+            </Link>
+            <button type="submit" className={primaryButtonClass}>Verify OTP</button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 
 export default PhoneSignUp;
+// sdfs 

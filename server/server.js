@@ -3,7 +3,7 @@ import Razorpay from 'razorpay';
 import { config } from "dotenv"; // Import dotenv
 import mongoose from 'mongoose'; // Import Mongoose
 import fs from 'fs';
-import Movie from './models/movies.js';
+import {Movie} from './models/movies.js';
 config({ path: "./config/config.env" });
 
 // Connect to MongoDB

@@ -7,25 +7,36 @@ const seatSchema = new mongoose.Schema({
     available: { type: Boolean, default: true }
 });
 
-// Movie slot schema
+
+// // Movie slot schema
 const movieSlotSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     timeSlots: [{
         timeSlot: { type: String, required: true },
         seats: [seatSchema], // Seats information for this time slot
-        availableSeatsCount: { type: Number, default: 10 } // Optimization
+        availableSeatsCount: { type: Number, default: 100 } // Optimization
     }]
 });
+
+// const timeSlotSchema = new mongoose.Schema({
+//     // date: { type: Date, required: true },
+//     timeSlot: { type: String, required: true },
+//     seats: [seatSchema]
+// });
+
 
 // Movie schema
 const movieSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     uniqueId: { type: String, required: true, unique: true },
     imageSrc: { type: String, required: true },
     trailerLink: { type: String },
-    availableSlots: [movieSlotSchema] // Define availableSlots as an array of movieSlotSchema
+    availableSlots: [movieSlotSchema], // Define availableSlots as an array of movieSlotSchema
+    // createdAt: { type: Date, default: Date.now }
 });
+
+// movieSchema.index({ createdAt: 1 });
 
 // Theater schema
 const theaterSchema = new mongoose.Schema({
@@ -33,18 +44,25 @@ const theaterSchema = new mongoose.Schema({
     location: { type: String }
 });
 
-// Booking schema
 const bookingSchema = new mongoose.Schema({
+    userId: { type: String, required: true},
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie' },
-    slot: { type: mongoose.Schema.Types.ObjectId, ref: 'Slot' },
-    seats: [seatSchema],
+    movieTitle: { type: String, required: true },
+    totalPayment: { type: Number, required: true },
+    slot: { // Storing slot details directly
+      date: { type: Date, required: true },
+      timeSlot: { type: String, required: true }
+    },
+    seats: [seatSchema],  // Array of seat documents
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' }
-});
+  });
+  
 
 // Model definitions
 const Movie = mongoose.model('Movie', movieSchema);
 const Theater = mongoose.model('Theater', theaterSchema);
 const Booking = mongoose.model('Booking', bookingSchema);
 
-export default Movie;
+// Named exports
+export { Movie, Theater, Booking };

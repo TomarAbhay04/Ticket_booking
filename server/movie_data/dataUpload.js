@@ -9,6 +9,7 @@ const startDataUpload = async () => {
     try {
         await Movie.create(moviesData);
         console.log('Data uploaded successfully');  
+        console.log(moviesData);
     } catch (error) {
         console.error('Error uploading data:', error);
     }

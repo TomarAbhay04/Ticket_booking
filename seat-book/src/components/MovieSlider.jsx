@@ -14,8 +14,11 @@ function MovieCarousel() {
   useEffect(() => {
     axios.get('http://localhost:4000/movies')
       .then(response => {
-        console.log(response.data.movies);
+        // console.log("movies data", response.data.movies);
         setMovies(response.data.movies);
+        // console.log("movie id ", response.data.movies_id);
+        // console.log("movie id data", response.data.movies.map((movie) => movie._id));
+        // movieImages.map((movie) => movie.src)
       })
       .catch(error => {
         console.log(error);
@@ -72,20 +75,13 @@ function MovieCarousel() {
     ]
   };
 
-  // const movieImages = [
-  //   { src: movie1, alt: "Movie 1" },
-  //   { src: movie2, alt: "Movie 2" },
-  //    { src: movie3, alt: "Movie 3" },
-  // ];
-
-  // console.log(movieImages.map((movie) => movie.src));
-
   return (
     <div className="carousel-container overflow-x-hidden relative">
       <Slider {...settings}>
         {Array.isArray(movies) && movies.map((movie) => (
-
+          
           <div key={movie.uniqueId} >
+            {/* <h1 className='text-4xl text-center my-2'>{movie._id}</h1> */}
             <Link to={`/movie/${movie.uniqueId}`}>
               <img src={movie.imageSrc} alt={movie.title} className="carousel-image w-full " />
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 my-2 rounded-full">Book Ticket</button>

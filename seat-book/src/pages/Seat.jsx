@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 function Seat() {
@@ -12,8 +12,11 @@ function Seat() {
     const [hoveredSeat, setHoveredSeat] = useState(null);
     const { movieId } = useParams();
     const navigate = useNavigate();
-
+    const location = useLocation();
+    const { selectedMovie, movieTitle} = location.state || {};
+                               
     useEffect(() => {
+        console.log(movieTitle, selectedMovie);
         const fetchSeatsData = async () => {
             try {
                 const response = await axios.get(`http://localhost:4000/movies/${movieId}`);
@@ -27,6 +30,7 @@ function Seat() {
                     const times = timeSlotsForSelectedDate.map(slot => slot.timeSlot);
                     setAvailableTimeSlots(times);
                     setSelectedTimeSlot(times[0]);
+                    // console.log(selectedTimeSlot)
                     const seatsForSelectedSlot = timeSlotsForSelectedDate.find(slot => slot.timeSlot === times[0]).seats;
                     setSeatsData(seatsForSelectedSlot);
                 }
@@ -79,14 +83,13 @@ function Seat() {
                 return [...prevSelectedSeats, seatId];
             }
         });
-        // console.log();
     };
 
     const handleCart = () => {
         const selectedSeatDetails = selectedSeats.map(seatId => {
             return seatsData.find(seat => seat._id === seatId);
         });
-        navigate('/cart', { state: { selectedSeats: selectedSeatDetails } });
+        navigate('/cart', { state: { selectedSeats: selectedSeatDetails, movieTitle,selectedMovie,selectedDate, selectedTimeSlot,  } });
     };
     
     const handleSeatHover = (seatId) => {
@@ -143,9 +146,12 @@ function Seat() {
     const totalPayment = selectedSeats.length * 150;
 
     return (
+        
         <div className="container mx-auto mt-8">
-            <div className="flex justify-center">
-                <div className="mr-4">
+            <h1 className='text-xl my-2 text-center'> {movieTitle}</h1> 
+            {/* {console.log(movieTitle)} */}
+            <div className="flex justify-center ">
+                <div className="mr-4"> 
                     <h2 className="text-md font-semibold mb-2">Select Date:</h2>
                     <div className="flex flex-wrap">
                         {availableDates.map(date => (
@@ -155,11 +161,12 @@ function Seat() {
                                 onClick={() => handleDateSelect(date)}
                             >
                                 {date}
+                                {/* console.log(date) */}
                             </button>
                         ))}
                     </div>
                 </div>
-                <div>
+                <div> 
                     <h2 className="text-md font-semibold mb-2">Select Time Slot:</h2>
                     <div className="flex flex-wrap">
                         {availableTimeSlots.map(timeSlot => (
@@ -169,6 +176,7 @@ function Seat() {
                                 onClick={() => handleTimeSlotSelect(timeSlot)}
                             >
                                 {timeSlot}
+                                {/* console.log(timeSlot) */}
                             </button>
                         ))}
                     </div>
@@ -186,6 +194,7 @@ function Seat() {
                 <div className="container mx-auto mb-4 text-center">
                     <button className="bg-blue-500 text-white px-4 py-2 rounded m-10" onClick={handleCart}>
                         Pay Rs. {totalPayment}
+                        {/* console.log(totalPayment) */}
                     </button>
                 </div>
             )}

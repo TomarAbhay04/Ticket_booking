@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Movie from '../models/movies.js';
+import { Movie } from '../models/movies.js';
 import { config } from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -18,15 +18,15 @@ const generateMovieData = () => {
     const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     for (let i = 1; i <= 5; i++) {
         const slotsData = [];
-        // Generate slots for each day
         for (let j = 0; j < 3; j++) {
             const date = new Date();
             date.setDate(date.getDate() + j); // Increment date for each day
             const formattedDate = daysOfWeek[date.getDay()] + ' ' + date.getDate() + ' ' + months[date.getMonth()];
-                        const slots = {
-                date: date,
+
+            const slots = {
+                date: date.toISOString(), // Convert to ISO string for comparison
                 timeSlots: [
-                    { timeSlot: '10:00 AM', seats: generateSeatsData(100) },
+                    { timeSlot: '11:00 AM', seats: generateSeatsData(100) },
                     { timeSlot: '02:00 PM', seats: generateSeatsData(100) },
                     { timeSlot: '06:00 PM', seats: generateSeatsData(100) }
                 ]
@@ -36,9 +36,9 @@ const generateMovieData = () => {
 
         const movie = {
             title: `Movie ${i}`,
-            description: `Description of Movie ${i}`,
+            // description: `Description of Movie ${i}`,
             uniqueId: `movie_${i}`,
-            imageSrc: `https://example.com/movie_${i}.jpg`,
+            imageSrc: `https://.com/movie_${i}.jpg`,
             trailerLink: `https://www.youtube.com/watch?v=trailer_${i}`,
             availableSlots: slotsData
         };
@@ -49,8 +49,6 @@ const generateMovieData = () => {
 };
 
 // Function to generate seats data
-// Function to generate seats data
-// Function to generate seats data with seat numbers and rows
 const generateSeatsData = (count) => {
     const seats = [];
     const seatsPerRow = 10;
@@ -68,43 +66,24 @@ const generateSeatsData = (count) => {
     return seats;
 };
 
-
-
 (async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI, {
-            bufferCommands: false // Disable mongoose buffering
+            bufferCommands: false
         });
         console.log('Connected to MongoDB');
 
         // Generate JSON data
         const newMoviesData = generateMovieData();
 
-        // Load existing data from the database
-        const existingMoviesData = await Movie.find({}, '-_id -__v');
+        // Clear existing data
+        await Movie.deleteMany({}); // Deletes all existing documents
 
-        // Check for changes and update existing data
-        const modifiedMoviesData = newMoviesData.map(newMovie => {
-            const existingMovie = existingMoviesData.find(movie => movie.uniqueId === newMovie.uniqueId);
-            if (existingMovie) {
-                const modifiedSlots = newMovie.availableSlots.map(newSlot => {
-                    const existingSlot = existingMovie.availableSlots.find(slot => slot.date.getTime() === newSlot.date.getTime());
-                    if (existingSlot) {
-                        return { ...existingSlot.toObject(), ...newSlot };
-                    }
-                    return newSlot;
-                });
-                return { ...existingMovie.toObject(), ...newMovie, availableSlots: modifiedSlots };
-            }
-            return newMovie;
-        });
-
-        // Update movies data in the database
-        await Movie.deleteMany({});
-        await Movie.insertMany(modifiedMoviesData);
+        // Insert new data
+        await Movie.insertMany(newMoviesData);
 
         // Write JSON data to a file
-        const jsonData = JSON.stringify(modifiedMoviesData, null, 2);
+        const jsonData = JSON.stringify(newMoviesData, null, 2);
         fs.writeFileSync(path.join(__dirname, 'movie_data.json'), jsonData, 'utf-8');
 
         console.log('Movie data has been updated in the "movies" collection and movie_data.json file.');

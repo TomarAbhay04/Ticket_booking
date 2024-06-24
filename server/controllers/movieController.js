@@ -1,4 +1,4 @@
-import Movie from '../models/movies.js';
+import {Movie} from '../models/movies.js';
 
 export const getMovieInfo = async (req, res) => {
     try {
@@ -14,6 +14,7 @@ export const getMovieInfoById = async (req, res) => {
     try {
         const movieId = req.params.movieId;
         const movie = await Movie.findOne({ uniqueId: movieId });
+        // console.log(movie);
 
         if (!movie) {
             return res.status(404).json({ message: 'Movie not found' });

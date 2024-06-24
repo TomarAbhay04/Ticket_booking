@@ -1,29 +1,35 @@
-// Navbar.js
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
+import ProfileSidebar from './ProfileSidebar';
 
 const Navbar = () => {
   const { user, logOut } = useUserAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleProfileClick = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleLogout = async () => {
+    await logOut();
+    setIsSidebarOpen(false);
+    // navigate('/login');
+  };
+
   const handleLoginClick = () => {
-    setShowLogin(!showLogin);
-    // Redirect to the login page only if not already logged in
-    if (!showLogin) {
-      navigate('/login');
-    }
+    setIsSidebarOpen(false);
+    navigate('/login');
   };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4 relative z-10">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-white font-bold text-lg">YourLogo</div>
@@ -38,13 +44,13 @@ const Navbar = () => {
 
         {/* Navigation Links (Hidden on Mobile) */}
         <div className="hidden lg:flex items-center space-x-8">
-          <Link to="/movies" className="text-white">
+          <Link to="/movies" className="text-white hover:text-gray-300">
             Movies
           </Link>
-          <Link to="/about-us" className="text-white">
+          <Link to="/about-us" className="text-white hover:text-gray-300">
             About Us
           </Link>
-          <Link to="/advertise-with-us" className="text-white">
+          <Link to="/advertise-with-us" className="text-white hover:text-gray-300">
             Advertise With Us
           </Link>
         </div>
@@ -52,13 +58,13 @@ const Navbar = () => {
         {/* Mobile Menu (Visible on Mobile) */}
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-16 left-0 right-0 bg-gray-700 p-4">
-            <Link to="/movies" className="text-white">
+            <Link to="/movies" className="block text-white py-2 hover:text-gray-300">
               Movies
             </Link>
-            <Link to="/about-us" className="text-white">
+            <Link to="/about-us" className="block text-white py-2 hover:text-gray-300">
               About Us
             </Link>
-            <Link to="/advertise-with-us" className="text-white">
+            <Link to="/advertise-with-us" className="block text-white py-2 hover:text-gray-300">
               Advertise With Us
             </Link>
           </div>
@@ -66,20 +72,20 @@ const Navbar = () => {
 
         {/* Profile Section */}
         <div className="flex items-center space-x-4">
-          {user ? (
-            // If user is authenticated, show user-specific content and a logout button
-            <>
-              <span className="text-white">{user.displayName}</span>
-              <button className="text-white" onClick={logOut}>
-                Logout
-              </button>
-            </>
-          ) : (
-            // If user is not authenticated, show the login link
-            <Link to="/login" className="text-white" onClick={handleLoginClick}>
-              Login
-            </Link>
-          )}
+          <span
+            className="text-white cursor-pointer hover:text-gray-300"
+            onClick={handleProfileClick}
+          >
+            {user ? user.displayName || user.phoneNumber : "Guest"}
+          </span>
+          {/* Profile Sidebar */}
+          <ProfileSidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            onLogout={handleLogout}
+            onLogin={handleLoginClick}
+            user={user}
+          />
         </div>
       </div>
     </nav>

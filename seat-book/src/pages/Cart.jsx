@@ -1,57 +1,52 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { useUserAuth } from '../context/UserAuthContext';  
 
 const Cart = () => {
+  const { user } = useUserAuth();
   const location = useLocation();
-  const seatsFromLocation = location.state?.selectedSeats || [];
-  const totalPayment = seatsFromLocation.length * 150;
+  const navigate = useNavigate();
+  const { movieTitle, selectedSeats, selectedMovie, selectedDate, selectedTimeSlot } = location.state || {};
+  const totalPayment = selectedSeats?.length * 150;
 
   const handlePayment = async () => {
-
+    if(!user) {
+      console.error('User not logged in. Redirecting to login page.');
+      navigate('/login');
+      return;
+    }
     try {
-      // Check if totalPayment is a valid number
-      // const totalPayment = seatsFromLocation.length * 150;
       if (typeof totalPayment !== 'number' || isNaN(totalPayment)) {
         console.error('Invalid totalPayment value:', totalPayment);
         return;
       }
 
-      // Create a clean payload
       const payload = {
-        // selectedSeats,
+        userId: user.uid,
+        selectedMovie,
         totalPayment,
-        // Add other necessary properties if needed
+        selectedTimeSlot,
+        selectedDate,
+        selectedSeats,
+        movieTitle,
       };
 
-      const { data: { key } } = await axios.get('http://localhost:4000/api/getkey')
+      const { data: { key } } = await axios.get('http://localhost:4000/api/getkey');
 
-      const { data: { order } } = await axios.post('http://localhost:4000/api/checkout', {
-        totalPayment: totalPayment
-      });
-
-      // console.log(data);
-
-      // Handle the response as needed
-
-
+      const { data: { order } } = await axios.post('http://localhost:4000/api/checkout', payload);
 
       const options = {
-        // modal: {
-        //   height: '100px', // Adjust the height value accordingly
-        // }, it's not working but in feature it will work...
-        key, // Enter the Key ID generated from the Dashboard
+        key, 
         amount: order.amount,
         currency: "INR",
         name: "Tomar Abhay",
-        description: "enabling razorpay for react applications",
+        description: "Enabling Razorpay for React applications",
         image: "https://example.com/your_logo",
         order_id: order.id,
-        callback_url: "http://localhost:4000/api/paymentverification",
         prefill: {
-          name: "Gaurav Kumar",
-          email: "gaurav.kumar@example.com",
+          name: user.displayName || "Tomar Abhay",
+          email: user.email || "tomarabhay@gmail.com",
           contact: "9000090000"
         },
         notes: {
@@ -59,23 +54,54 @@ const Cart = () => {
         },
         theme: {
           "color": "#3399cc"
+        },
+        handler: async (response) => {
+          try {
+            const verificationResponse = await axios.post('http://localhost:4000/api/paymentverification', {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              bookingDetails: payload,
+            });
+
+            const redirectURL = verificationResponse.data.redirectURL;
+            if (redirectURL) {
+              navigate(redirectURL);
+            } else {
+              console.error('Redirection URL not provided in response.');
+            }
+          } catch (error) {
+            console.error('Error during payment verification:', error);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            console.log("User closed the modal");
+          }
         }
       };
+
       const razor = new window.Razorpay(options);
+      razor.on('payment.failed', (response) => {
+        console.error('Payment failed:', response.error);
+      });
       razor.open();
     } catch (error) {
       console.error('Error during checkout:', error);
     }
-
   };
 
-  const displaySeats = seatsFromLocation.map(seat => `${seat.seatRow}-${seat.seatNumber}`).join(', ');
+  const displaySeats = selectedSeats.map(seat => `${seat.seatRow}-${seat.seatNumber}`).join(', ');
 
   return (
     <div className="flex justify-center items-center h-full">
       <div className="cart-container flex justify-center flex-col">
         <h1 className='mb-4'>Booking Cart</h1>
-        {seatsFromLocation.length === 0 ? (
+        <h1>{movieTitle}</h1>
+        <h1>{selectedDate}</h1>
+        <h1>{selectedTimeSlot}</h1>
+
+        {selectedSeats.length === 0 ? (
           <p>Your cart is empty. Please select seats to book.</p>
         ) : (
           <div>
@@ -83,7 +109,7 @@ const Cart = () => {
               <h2>Your Seats: {displaySeats}</h2>
             </div>
             <div className="cart-summary">
-              <h3>Total Seats: {seatsFromLocation.length}</h3>
+              <h3>Total Seats: {selectedSeats.length}</h3>
               <h3>Total Price: Rs. {totalPayment}</h3>
             </div>
             <button className="bg-blue-500 text-white px-4 py-2 rounded m-10" onClick={handlePayment}>Proceed to Checkout</button>

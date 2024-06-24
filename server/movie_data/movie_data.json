@@ -1,16 +1,15 @@
 [
   {
     "title": "Movie 1",
-    "description": "Description of Movie 1",
     "uniqueId": "movie_1",
-    "imageSrc": "https://example.com/movie_1.jpg",
+    "imageSrc": "https://.com/movie_1.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=trailer_1",
     "availableSlots": [
       {
-        "date": "2024-03-19T04:30:03.313Z",
+        "date": "2024-06-23T10:43:46.529Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -1527,10 +1526,10 @@
         ]
       },
       {
-        "date": "2024-03-20T04:30:03.314Z",
+        "date": "2024-06-24T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -3047,10 +3046,10 @@
         ]
       },
       {
-        "date": "2024-03-21T04:30:03.314Z",
+        "date": "2024-06-25T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -4570,16 +4569,15 @@
   },
   {
     "title": "Movie 2",
-    "description": "Description of Movie 2",
     "uniqueId": "movie_2",
-    "imageSrc": "https://example.com/movie_2.jpg",
+    "imageSrc": "https://.com/movie_2.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=trailer_2",
     "availableSlots": [
       {
-        "date": "2024-03-19T04:30:03.314Z",
+        "date": "2024-06-23T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -6096,10 +6094,10 @@
         ]
       },
       {
-        "date": "2024-03-20T04:30:03.314Z",
+        "date": "2024-06-24T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -7616,10 +7614,10 @@
         ]
       },
       {
-        "date": "2024-03-21T04:30:03.315Z",
+        "date": "2024-06-25T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -9139,16 +9137,15 @@
   },
   {
     "title": "Movie 3",
-    "description": "Description of Movie 3",
     "uniqueId": "movie_3",
-    "imageSrc": "https://example.com/movie_3.jpg",
+    "imageSrc": "https://.com/movie_3.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=trailer_3",
     "availableSlots": [
       {
-        "date": "2024-03-19T04:30:03.315Z",
+        "date": "2024-06-23T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -10665,10 +10662,10 @@
         ]
       },
       {
-        "date": "2024-03-20T04:30:03.315Z",
+        "date": "2024-06-24T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -12185,10 +12182,10 @@
         ]
       },
       {
-        "date": "2024-03-21T04:30:03.315Z",
+        "date": "2024-06-25T10:43:46.531Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -13708,16 +13705,15 @@
   },
   {
     "title": "Movie 4",
-    "description": "Description of Movie 4",
     "uniqueId": "movie_4",
-    "imageSrc": "https://example.com/movie_4.jpg",
+    "imageSrc": "https://.com/movie_4.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=trailer_4",
     "availableSlots": [
       {
-        "date": "2024-03-19T04:30:03.315Z",
+        "date": "2024-06-23T10:43:46.532Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -15234,10 +15230,10 @@
         ]
       },
       {
-        "date": "2024-03-20T04:30:03.315Z",
+        "date": "2024-06-24T10:43:46.532Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -16754,10 +16750,10 @@
         ]
       },
       {
-        "date": "2024-03-21T04:30:03.315Z",
+        "date": "2024-06-25T10:43:46.532Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -18277,16 +18273,15 @@
   },
   {
     "title": "Movie 5",
-    "description": "Description of Movie 5",
     "uniqueId": "movie_5",
-    "imageSrc": "https://example.com/movie_5.jpg",
+    "imageSrc": "https://.com/movie_5.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=trailer_5",
     "availableSlots": [
       {
-        "date": "2024-03-19T04:30:03.316Z",
+        "date": "2024-06-23T10:43:46.532Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -19803,10 +19798,10 @@
         ]
       },
       {
-        "date": "2024-03-20T04:30:03.316Z",
+        "date": "2024-06-24T10:43:46.532Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
@@ -21323,10 +21318,10 @@
         ]
       },
       {
-        "date": "2024-03-21T04:30:03.316Z",
+        "date": "2024-06-25T10:43:46.532Z",
         "timeSlots": [
           {
-            "timeSlot": "10:00 AM",
+            "timeSlot": "11:00 AM",
             "seats": [
               {
                 "seatNumber": "1",
