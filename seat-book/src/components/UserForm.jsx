@@ -17,7 +17,7 @@ const UserForm = () => {
     e.preventDefault();
     try {
       console.log('Submitting form data:', formData); // Log payload before sending
-      const response = await axios.post('http://localhost:4000/api/user', formData);
+      const response = await axios.post('https://ticket-booking-backend-rylx.onrender.com/api/user', formData);
       alert('User created successfully');
       console.log(response.data);
     } catch (error) {

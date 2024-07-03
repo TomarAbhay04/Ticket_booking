@@ -21,7 +21,7 @@ function MovieInfo() {
 
   useEffect(() => {
     console.log("Fetching movie data for movieId:", movieId);
-    axios.get(`http://localhost:4000/movies/${movieId}`)
+    axios.get(`https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}`)
       .then(response => {
         console.log("Fetched movie data:", response.data.movie);
         setMovie(response.data.movie);

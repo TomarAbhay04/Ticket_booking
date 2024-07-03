@@ -19,7 +19,7 @@ function Seat() {
         console.log(movieTitle, selectedMovie);
         const fetchSeatsData = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/movies/${movieId}`);
+                const response = await axios.get(`https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}`);
                 const movie = response.data.movie
                 if (movie) {
                     const availableTimeSlots = movie.availableSlots;
@@ -47,7 +47,7 @@ function Seat() {
         setSelectedTimeSlot(null);
     
         try {
-            const response = await axios.get(`http://localhost:4000/movies/${movieId}/timeslots/${date}`);
+            const response = await axios.get(`https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}/timeslots/${date}`);
             const timeSlots = response.data.timeSlots;
     
             if (timeSlots.length > 0) {
