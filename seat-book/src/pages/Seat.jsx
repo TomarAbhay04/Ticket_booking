@@ -92,13 +92,13 @@ function Seat() {
         navigate('/cart', { state: { selectedSeats: selectedSeatDetails, movieTitle,selectedMovie,selectedDate, selectedTimeSlot,  } });
     };
     
-    const handleSeatHover = (seatId) => {
-        setHoveredSeat(seatId); // Set the currently hovered seat ID
-    };
+    // const handleSeatHover = (seatId) => {
+    //     setHoveredSeat(seatId); // Set the currently hovered seat ID
+    // };
 
-    const handleSeatLeave = () => {
-        setHoveredSeat(null); // Reset the currently hovered seat ID
-    };
+    // const handleSeatLeave = () => {
+    //     setHoveredSeat(null); // Reset the currently hovered seat ID
+    // };
 
     const renderSeats = () => {
         if (seatsData.length === 0) {
@@ -126,7 +126,7 @@ function Seat() {
                     {rowSeats.map(seat => (
                         <button
                             key={seat._id}
-                            className={`seat ${seat.available ? 'bg-gray-300 border-solid border-green-500' : 'bg-gray-300'} ${selectedSeats.includes(seat._id) ? 'bg-green-500' : ''} ${hoveredSeat === seat._id ? 'bg-green-500' : '' } w-7 h-7 mb-1 mx-2 p-2 rounded-md flex items-center justify-center text-xs text-green-800 `}
+                            className={`seat ${seat.available ? 'bg-gray-300 border-solid border-green-500' : 'bg-gray-300'} ${selectedSeats.includes(seat._id) ? 'bg-green-500' : ''} ${hoveredSeat === seat._id ? 'bg-red-500' : '' } w-7 h-7 mb-1 mx-2 p-2 rounded-md flex items-center justify-center text-xs text-green-800 `}
                             disabled={!seat.available}
                             onClick={() => handleSeatClick(seat._id)}
                             onMouseEnter={() => handleSeatHover(seat._id)} // Add onMouseEnter event listener
