@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useUserAuth } from '../context/UserAuthContext';  
+import { useUserAuth } from '../context/UserAuthContext';
+import { formatDisplayDate } from '../utils/dateUtils.js'; // Utility function to format dates
 
 const Cart = () => {
   const { user } = useUserAuth();
@@ -11,7 +12,7 @@ const Cart = () => {
   const totalPayment = selectedSeats?.length * 150;
 
   const handlePayment = async () => {
-    if(!user) {
+    if (!user) {
       console.error('User not logged in. Redirecting to login page.');
       navigate('/login');
       return;
@@ -37,7 +38,7 @@ const Cart = () => {
       const { data: { order } } = await axios.post('https://ticket-booking-backend-rylx.onrender.com/api/checkout', payload);
 
       const options = {
-        key, 
+        key,
         amount: order.amount,
         currency: "INR",
         name: "Tomar Abhay",
@@ -94,27 +95,39 @@ const Cart = () => {
   const displaySeats = selectedSeats.map(seat => `${seat.seatRow}-${seat.seatNumber}`).join(', ');
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="cart-container flex justify-center flex-col">
-        <h1 className='mb-4'>Booking Cart</h1>
-        <h1>{movieTitle}</h1>
-        <h1>{selectedDate}</h1>
-        <h1>{selectedTimeSlot}</h1>
-
-        {selectedSeats.length === 0 ? (
-          <p>Your cart is empty. Please select seats to book.</p>
-        ) : (
-          <div>
-            <div className="cart-item">
-              <h2>Your Seats: {displaySeats}</h2>
-            </div>
-            <div className="cart-summary">
-              <h3>Total Seats: {selectedSeats.length}</h3>
-              <h3>Total Price: Rs. {totalPayment}</h3>
-            </div>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded m-10" onClick={handlePayment}>Proceed to Checkout</button>
+    <div className="container mx-auto mt-8">
+      <div className="flex justify-center items-center">
+        <div className="cart-container flex flex-col w-1/2 p-6 bg-white shadow-md rounded-lg">
+          <h1 className='text-3xl font-bold mb-4'>Booking Cart</h1>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold">{movieTitle}</h2>
+            <p className="text-lg text-gray-600">{formatDisplayDate(selectedDate)}</p>
+            <p className="text-lg text-gray-600">{selectedTimeSlot}</p>
           </div>
-        )}
+
+          {selectedSeats.length === 0 ? (
+            <p className="text-lg text-gray-800">Your cart is empty. Please select seats to book.</p>
+          ) : (
+            <div className="mb-6">
+              <div className="cart-item mb-4">
+                <h2 className="text-xl font-semibold">Selected Seats:</h2>
+                <p>{displaySeats}</p>
+              </div>
+              <div className="cart-summary">
+                <h3 className="text-lg font-semibold">Total Seats: {selectedSeats.length}</h3>
+                <h3 className="text-lg font-semibold">Total Price: ₹{totalPayment}</h3>
+              </div>
+            </div>
+          )}
+
+          {selectedSeats.length > 0 && (
+            <div className="flex justify-center">
+              <button className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 focus:outline-none" onClick={handlePayment}>
+                Proceed to Checkout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
