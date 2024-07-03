@@ -19,7 +19,7 @@ function MovieCarousel() {
   }, []);
 
   const settings = {
-    dots: true,
+    // dots: true,
     infinite: true,
     autoplay: true,
     autoplaySpeed: 2000,
