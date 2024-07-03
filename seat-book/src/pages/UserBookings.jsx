@@ -1,5 +1,3 @@
-// Orders.jsx
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUserAuth } from '../context/UserAuthContext';
@@ -41,11 +39,16 @@ const UserBookings = () => {
               <p>Time Slot: {booking.slot.timeSlot}</p>
               <p>Seats: {booking.seats.map(seat => `${seat.seatRow}-${seat.seatNumber}`).join(', ')}</p>
               <p>Total Payment: Rs. {booking.totalPayment}</p>
+              <p className="font-medium">
+                Payment Status: <span className={booking.paymentStatus === 'Paid' ? 'text-red-500' : 'text-green-500'}>{booking.paymentStatus}</span>
+              </p>
             </div>
           ))}
         </div>
       )}
-      <Link to="/"><button className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Back to Home</button></Link>
+      <Link to="/">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Back to Home</button>
+      </Link>
     </div>
   );
 };

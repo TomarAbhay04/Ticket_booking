@@ -13,10 +13,12 @@ const inputFieldClass = 'w-full p-2 border border-gray-300 rounded-lg focus:ring
 const PhoneSignUp = () => {
   const [number, setNumber] = useState('');
   const [otp, setOtp] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [flag, setFlag] = useState(false);
-  const [confirmObj, setConfirmObj] = useState('');
-  const { setUpRecaptcha } = useUserAuth(); // Added setUser to update user context
+  const [confirmObj, setConfirmObj] = useState(null);
+  const { setUpRecaptcha } = useUserAuth();
   const navigate = useNavigate();
 
   const getOtp = async (e) => {
@@ -44,14 +46,48 @@ const PhoneSignUp = () => {
     }
     try {
       const result = await confirmObj.confirm(otp);
-      // Update user context with displayName or phone number
-      // setUser({
-      //   ...result.user,
-      //   displayName: result.user.displayName || result.user.phoneNumber,
-      // });
-      navigate('/');
+
+      // Assuming you have a function to register user data in MongoDB
+      // Example function to save user data
+      await registerUser({
+        name,
+        email,
+        phoneNumber: number,
+        });
+
+      // Clear form fields and navigate to home page
+      setName('');
+      setEmail('');
+      setNumber('');
+      setOtp('');
+      setConfirmObj(null);
+      setFlag(false);
+      navigate('/'); // Redirect to home page after successful registration
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  const registerUser = async (userData) => {
+    try {
+      // Send user data to your backend (Node.js) to save in MongoDB
+      const response = await fetch('http://localhost:4000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to register user');
+      }
+
+      const data = await response.json();
+      console.log('User registered:', data);
+    } catch (error) {
+      console.error('Error registering user:', error.message);
+      throw error;
     }
   };
 
@@ -89,12 +125,26 @@ const PhoneSignUp = () => {
               onChange={(e) => setOtp(e.target.value)}
               className={`${inputFieldClass} mb-4`}
             />
+            <input
+              type="text"
+              placeholder="Enter Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={`${inputFieldClass} mb-4`}
+            />
+            <input
+              type="email"
+              placeholder="Enter Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={`${inputFieldClass} mb-4`}
+            />
           </div>
           <div className="flex justify-between">
             <Link to="/">
               <button type="button" className={secondaryButtonClass}>Cancel</button>
             </Link>
-            <button type="submit" className={primaryButtonClass}>Verify OTP</button>
+            <button type="submit" className={primaryButtonClass}>Verify OTP & Register</button>
           </div>
         </form>
       </div>
@@ -103,4 +153,3 @@ const PhoneSignUp = () => {
 };
 
 export default PhoneSignUp;
-// sdfs 

@@ -8,6 +8,8 @@ import Home from './Home.jsx';
 import Login from '../components/LoginUser.jsx';
 import MoviesInfo from './MoviesInfo.jsx';
 import UserBookings from './UserBookings.jsx';
+import User from './User.jsx';
+import Movie from './Movies.jsx';
 
 
 const App = () => {
@@ -15,7 +17,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/seat" element={<Seat />} /> */}
+        <Route path="/user" element={<User />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/paymentsuccess" element={<PaymentSuccess/>} />
         <Route path='/login' element={<Login />} />
@@ -23,6 +25,7 @@ const App = () => {
         <Route path='/movie/:movieId' element={<MoviesInfo />} />
         <Route path='/movie/:movieId/seat' element={<Seat />} />
         <Route path='/orders' element={<UserBookings />} />
+        <Route path ='/movies' element={<Movie />} />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </Router>
