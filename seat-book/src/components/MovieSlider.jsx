@@ -7,19 +7,21 @@ import 'slick-carousel/slick/slick-theme.css';
 
 function MovieCarousel() {
   const [movies, setMovies] = useState([]); // State to hold your movie data
+  const [loading, setLoading] = useState(true); // State for loading
 
   useEffect(() => {
     axios.get('https://ticket-booking-backend-rylx.onrender.com/movies')
       .then(response => {
         setMovies(response.data.movies);
+        setLoading(false); // Set loading to false when data is fetched
       })
       .catch(error => {
         console.log(error);
+        setLoading(false); // Ensure loading is false in case of error
       });
   }, []);
 
   const settings = {
-    // dots: true,
     infinite: true,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -49,6 +51,14 @@ function MovieCarousel() {
       }
     ]
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="loader border-t-4 border-b-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="carousel-container overflow-x-hidden relative max-w-full">
