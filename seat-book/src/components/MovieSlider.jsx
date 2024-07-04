@@ -5,6 +5,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
+
 function MovieCarousel() {
   const [movies, setMovies] = useState([]); // State to hold your movie data
   const [loading, setLoading] = useState(true); // State for loading

@@ -7,6 +7,7 @@ const UserBookings = () => {
   const { user } = useUserAuth();
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     if (user) {
@@ -21,8 +22,18 @@ const UserBookings = () => {
     } catch (error) {
       console.error('Error fetching bookings:', error);
       setError('Failed to fetch bookings.');
+    } finally {
+      setLoading(false); // Set loading to false once data is fetched
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -40,7 +51,7 @@ const UserBookings = () => {
               <p>Seats: {booking.seats.map(seat => `${seat.seatRow}-${seat.seatNumber}`).join(', ')}</p>
               <p>Total Payment: Rs. {booking.totalPayment}</p>
               <p className="font-medium">
-                Payment Status: <span className={booking.paymentStatus === 'Paid' ? 'text-red-500' : 'text-green-500'}>{booking.paymentStatus}</span>
+                Payment Status: <span className={booking.paymentStatus === 'Paid' ? 'text-green-500' : 'text-red-500'}>{booking.paymentStatus}</span>
               </p>
             </div>
           ))}
