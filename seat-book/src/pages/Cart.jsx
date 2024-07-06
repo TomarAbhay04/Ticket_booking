@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUserAuth } from '../context/UserAuthContext';
 import { formatDisplayDate } from '../utils/dateUtils.js'; // Utility function to format dates
+import { Oval } from 'react-loader-spinner'; // Assuming you use 'react-loader-spinner'
 
 const Cart = () => {
   const { user } = useUserAuth();
@@ -11,6 +12,7 @@ const Cart = () => {
   const { movieTitle, selectedSeats, selectedMovie, selectedDate, selectedTimeSlot, movieImage } = location.state || {};
   console.log(movieImage)
   const totalPayment = selectedSeats?.length * 150;
+  const [loading, setLoading] = useState(false);
 
   const handlePayment = async () => {
     if (!user) {
@@ -18,9 +20,11 @@ const Cart = () => {
       navigate('/login');
       return;
     }
+    setLoading(true); // Set loading to true when payment process starts
     try {
       if (typeof totalPayment !== 'number' || isNaN(totalPayment)) {
         console.error('Invalid totalPayment value:', totalPayment);
+        setLoading(false); // Stop loading on error
         return;
       }
 
@@ -74,11 +78,14 @@ const Cart = () => {
             }
           } catch (error) {
             console.error('Error during payment verification:', error);
+          } finally {
+            setLoading(false); // Stop loading after payment handling
           }
         },
         modal: {
           ondismiss: function () {
             console.log("User closed the modal");
+            setLoading(false); // Stop loading if modal is dismissed
           }
         }
       };
@@ -86,10 +93,12 @@ const Cart = () => {
       const razor = new window.Razorpay(options);
       razor.on('payment.failed', (response) => {
         console.error('Payment failed:', response.error);
+        setLoading(false); // Stop loading on payment failure
       });
       razor.open();
     } catch (error) {
       console.error('Error during checkout:', error);
+      setLoading(false); // Stop loading on error
     }
   };
 
@@ -124,17 +133,25 @@ const Cart = () => {
 
             {selectedSeats.length > 0 && (
               <div className="flex justify-center">
-                <button className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 focus:outline-none" onClick={handlePayment}>
-                  Proceed to Checkout
+                               <button 
+                  className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 focus:outline-none" 
+                  onClick={handlePayment} 
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <Oval color="#fff" height={20} width={20} />
+                  ) : (
+                    'Proceed to Checkout'
+                  )}
                 </button>
+
               </div>
             )}
           </div>
-          <div className="movie-image-container  flex ">
+          <div className="movie-image-container flex">
             <img className="w-50 h-80 object-cover" 
               src={movieImage}
               alt={movieTitle}
-              // 119x203 px aspect ratio 17:29
             />
           </div>
         </div>

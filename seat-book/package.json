@@ -21,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-google-button": "^0.7.2",
     "react-icons": "^5.2.1",
+    "react-loader-spinner": "^6.1.6",
     "react-phone-number-input": "^3.3.8",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
