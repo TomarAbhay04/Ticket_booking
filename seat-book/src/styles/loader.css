@@ -1,0 +1,30 @@
+/* loader.css */
+@keyframes dot-color {
+  0%, 100% {
+    background-color: #3498db; /* Blue */
+  }
+  25% {
+    background-color: #f39c12; /* Orange */
+  }
+  50% {
+    background-color: #2ecc71; /* Green */
+  }
+  75% {
+    background-color: #e74c3c; /* Red */
+  }
+}
+
+.animate-dot1 {
+  animation: dot-color 2s infinite;
+  animation-delay: 0.2s; /* Delay for sequential animation */
+}
+
+.animate-dot2 {
+  animation: dot-color 2s infinite;
+  animation-delay: 0.4s; /* Delay for sequential animation */
+}
+
+.animate-dot3 {
+  animation: dot-color 2s infinite;
+  animation-delay: 0.6s; /* Delay for sequential animation */
+}

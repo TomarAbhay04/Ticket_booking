@@ -2,6 +2,7 @@ import React from 'react';
 // import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx'; 
 import MovieSlider from '../components/MovieSlider.jsx';
+import MovieCard from '../components/MovieCard.jsx';
 import Footer from '../components/Footer.jsx';
 
 const Home = () => {
@@ -18,7 +19,9 @@ const Home = () => {
       {/* Carousel Section */}
       <div className="mt-0">
         {/* Carousel component for displaying movies */}
-        <MovieSlider />
+        {/* <MovieSlider /> */}
+        <MovieCard/>
+
         {/* Consider using a third-party carousel library or creating your own component */}
       </div>
 

@@ -5,7 +5,6 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-
 function MovieCarousel() {
   const [movies, setMovies] = useState([]); // State to hold your movie data
   const [loading, setLoading] = useState(true); // State for loading
@@ -67,8 +66,12 @@ function MovieCarousel() {
         {Array.isArray(movies) && movies.map((movie) => (
           <div key={movie.uniqueId} className="relative">
             <Link to={`/movie/${movie.uniqueId}`} className="block">
-              <div className="relative w-full" style={{ paddingBottom: '28.2%' }}> {/* Aspect ratio for 1064x300 */}
-                <img src={movie.imageSrc} alt={movie.title} className="absolute inset-0 w-full h-full object-cover" />
+              <div className="relative" style={{ width: '1064px', height: '300px' }}> {/* Set fixed size */}
+                <img
+                  src={`data:image/jpeg;base64,${movie.imageSrc}`}
+                  alt={movie.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               </div>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-2 rounded-full absolute bottom-4 left-1/2 transform -translate-x-1/2">
                 Book Ticket

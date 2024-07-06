@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import { formatDisplayDate } from "../utils/dateUtils";
+import Loader from '../components/Loader';
+import "../styles/loader.css";
 
 function Seat() {
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -11,15 +13,16 @@ function Seat() {
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [seatsData, setSeatsData] = useState([]);
   const [hoveredSeat, setHoveredSeat] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isLoadingSeats, setIsLoadingSeats] = useState(true); // Loading state for seats
+  const [isLoadingTimeSlots, setIsLoadingTimeSlots] = useState(false); // Loading state for time slots
   const { movieId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectedMovie, movieTitle } = location.state || {};
+  const { selectedMovie, movieTitle, movieImage} = location.state || {};
 
   useEffect(() => {
     const fetchSeatsData = async () => {
-      setIsLoading(true); // Start loading
+      setIsLoadingSeats(true); // Start loading seats
       try {
         const response = await axios.get(
           `https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}`
@@ -44,7 +47,7 @@ function Seat() {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setIsLoading(false); // End loading
+        setIsLoadingSeats(false); // End loading seats
       }
     };
 
@@ -52,7 +55,8 @@ function Seat() {
   }, [movieId]);
 
   const handleSelect = async (date, timeSlot = null) => {
-    setIsLoading(true); // Start loading
+    setIsLoadingTimeSlots(true); // Start loading time slots
+    setIsLoadingSeats(true); // Start loading seats
     setSelectedDate(date);
     setSelectedTimeSlot(timeSlot);
     setSelectedSeats([]); // Clear selected seats
@@ -77,7 +81,8 @@ function Seat() {
     } catch (error) {
       console.error("Error fetching time slots:", error);
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoadingTimeSlots(false); // End loading time slots
+      setIsLoadingSeats(false); // End loading seats
     }
   };
 
@@ -110,6 +115,7 @@ function Seat() {
         selectedMovie,
         selectedDate,
         selectedTimeSlot,
+        movieImage,
       },
     });
   };
@@ -122,26 +128,9 @@ function Seat() {
     setHoveredSeat(null); // Reset the currently hovered seat ID
   };
 
-  // Function to format the date
-//   const formatDate = (isoString) => {
-//     const date = new Date(isoString);
-//     const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-//     const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-
-//     const dayOfWeek = daysOfWeek[date.getUTCDay()];
-//     const day = date.getUTCDate();
-//     const month = months[date.getUTCMonth()];
-
-//     return `${dayOfWeek} ${day} ${month}`;
-//   };
-
   const renderSeats = () => {
-    if (isLoading) {
-      return (
-        <div className="flex justify-center items-center">
-          <div className="loader"></div>
-        </div>
-      );
+    if (isLoadingSeats) {
+      return <Loader />; // Show loader while loading seats
     }
 
     if (seatsData.length === 0) {
@@ -176,7 +165,7 @@ function Seat() {
                   ? "bg-gray-400" // Booked seats
                   : selectedSeats.includes(seat._id)
                   ? "bg-green-500 text-white" // Selected seats
-                  : "bg-white border border-green-500 text-transparent" // Available seats
+                  : "bg-white border border-black text-transparent hover:bg-green-500 hover:text-white" // Available seats
               }`}
               disabled={!seat.available}
               onClick={() => handleSeatClick(seat._id)}
@@ -212,7 +201,7 @@ function Seat() {
                 }`}
                 onClick={() => handleDateSelect(date)}
               >
-              { formatDisplayDate(date) }
+                {formatDisplayDate(date)}
               </button>
             ))}
           </div>
@@ -220,19 +209,23 @@ function Seat() {
         <div>
           <h2 className="text-md font-semibold mb-2">Select Time Slot:</h2>
           <div className="flex flex-wrap">
-            {availableTimeSlots.map((timeSlot) => (
-              <button
-                key={timeSlot}
-                className={` px-3 py-1 rounded-full mr-2 mb-2 ${
-                  selectedTimeSlot === timeSlot
-                    ? "bg-green-500 text-black"
-                    : "bg-white border border-black text-black"
-                }`}
-                onClick={() => handleTimeSlotSelect(timeSlot)}
-              >
-                {timeSlot}
-              </button>
-            ))}
+            {isLoadingTimeSlots ? (
+              <Loader />
+            ) : (
+              availableTimeSlots.map((timeSlot) => (
+                <button
+                  key={timeSlot}
+                  className={` px-3 py-1 rounded-full mr-2 mb-2 ${
+                    selectedTimeSlot === timeSlot
+                      ? "bg-green-500 text-black"
+                      : "bg-white border border-black text-black"
+                  }`}
+                  onClick={() => handleTimeSlotSelect(timeSlot)}
+                >
+                  {timeSlot}
+                </button>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -258,4 +251,3 @@ function Seat() {
 }
 
 export default Seat;
-

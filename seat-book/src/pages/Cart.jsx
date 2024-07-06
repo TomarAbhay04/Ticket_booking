@@ -8,7 +8,8 @@ const Cart = () => {
   const { user } = useUserAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const { movieTitle, selectedSeats, selectedMovie, selectedDate, selectedTimeSlot } = location.state || {};
+  const { movieTitle, selectedSeats, selectedMovie, selectedDate, selectedTimeSlot, movieImage } = location.state || {};
+  console.log(movieImage)
   const totalPayment = selectedSeats?.length * 150;
 
   const handlePayment = async () => {
@@ -97,36 +98,45 @@ const Cart = () => {
   return (
     <div className="container mx-auto mt-8">
       <div className="flex justify-center items-center">
-        <div className="cart-container flex flex-col w-1/2 p-6 bg-white shadow-md rounded-lg">
-          <h1 className='text-3xl font-bold mb-4'>Booking Cart</h1>
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold">{movieTitle}</h2>
-            <p className="text-lg text-gray-600">{formatDisplayDate(selectedDate)}</p>
-            <p className="text-lg text-gray-600">{selectedTimeSlot}</p>
+        <div className="cart-container flex flex-col md:flex-row w-full md:w-2/3 p-6 bg-white shadow-md rounded-lg">
+          <div className="flex flex-col w-full md:w-2/3">
+            <h1 className='text-3xl font-bold mb-4'>Booking Cart</h1>
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold">{movieTitle}</h2>
+              <p className="text-lg text-gray-600">{formatDisplayDate(selectedDate)}</p>
+              <p className="text-lg text-gray-600">{selectedTimeSlot}</p>
+            </div>
+
+            {selectedSeats.length === 0 ? (
+              <p className="text-lg text-gray-800">Your cart is empty. Please select seats to book.</p>
+            ) : (
+              <div className="mb-6">
+                <div className="cart-item mb-4">
+                  <h2 className="text-xl font-semibold">Selected Seats:</h2>
+                  <p>{displaySeats}</p>
+                </div>
+                <div className="cart-summary">
+                  <h3 className="text-lg font-semibold">Total Seats: {selectedSeats.length}</h3>
+                  <h3 className="text-lg font-semibold">Total Price: ₹{totalPayment}</h3>
+                </div>
+              </div>
+            )}
+
+            {selectedSeats.length > 0 && (
+              <div className="flex justify-center">
+                <button className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 focus:outline-none" onClick={handlePayment}>
+                  Proceed to Checkout
+                </button>
+              </div>
+            )}
           </div>
-
-          {selectedSeats.length === 0 ? (
-            <p className="text-lg text-gray-800">Your cart is empty. Please select seats to book.</p>
-          ) : (
-            <div className="mb-6">
-              <div className="cart-item mb-4">
-                <h2 className="text-xl font-semibold">Selected Seats:</h2>
-                <p>{displaySeats}</p>
-              </div>
-              <div className="cart-summary">
-                <h3 className="text-lg font-semibold">Total Seats: {selectedSeats.length}</h3>
-                <h3 className="text-lg font-semibold">Total Price: ₹{totalPayment}</h3>
-              </div>
-            </div>
-          )}
-
-          {selectedSeats.length > 0 && (
-            <div className="flex justify-center">
-              <button className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 focus:outline-none" onClick={handlePayment}>
-                Proceed to Checkout
-              </button>
-            </div>
-          )}
+          <div className="movie-image-container  flex ">
+            <img className="w-50 h-80 object-cover" 
+              src={movieImage}
+              alt={movieTitle}
+              // 119x203 px aspect ratio 17:29
+            />
+          </div>
         </div>
       </div>
     </div>

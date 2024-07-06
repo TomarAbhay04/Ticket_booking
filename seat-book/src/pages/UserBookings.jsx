@@ -7,7 +7,7 @@ const UserBookings = () => {
   const { user } = useUserAuth();
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -23,10 +23,11 @@ const UserBookings = () => {
       console.error('Error fetching bookings:', error);
       setError('Failed to fetch bookings.');
     } finally {
-      setLoading(false); // Set loading to false once data is fetched
+      setLoading(false);
     }
   };
 
+  // Check for error or no bookings only after loading is complete
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -39,7 +40,7 @@ const UserBookings = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4">My Orders</h1>
       {error && <p className="text-red-500">{error}</p>}
-      {bookings.length === 0 ? (
+      {(!error && bookings.length === 0) ? (
         <p>No bookings found.</p>
       ) : (
         <div className="space-y-4">

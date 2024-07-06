@@ -1,51 +1,85 @@
+// uploadImages.js
 import mongoose from 'mongoose';
 import { Movie } from '../models/movies.js';
-import { config } from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import fs from 'fs';
+import path from 'path';
+import { config } from 'dotenv';
 
-// Load environment variables from the config folder
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-config({ path: path.resolve(__dirname, '..', 'config', 'config.env') });
+config({ path: '../config/config.env' });
 
-console.log('MongoDB URI:', process.env.MONGODB_URI);
-
-// Function to generate JSON data
-const generateMovieData = () => {
-    const movies = [];
-    const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    for (let i = 1; i <= 5; i++) {
-        const slotsData = [];
-        for (let j = 0; j < 3; j++) {
-            const date = new Date();
-            date.setDate(date.getDate() + j); // Increment date for each day
-            const formattedDate = daysOfWeek[date.getDay()] + ' ' + date.getDate() + ' ' + months[date.getMonth()];
-
-            const slots = {
-                date: date.toISOString(), // Convert to ISO string for comparison
-                timeSlots: [
-                    { timeSlot: '11:00 AM', seats: generateSeatsData(100) },
-                    { timeSlot: '02:00 PM', seats: generateSeatsData(100) },
-                    { timeSlot: '06:00 PM', seats: generateSeatsData(100) }
-                ]
-            };
-            slotsData.push(slots);
-        }
-
-        const movie = {
-            title: `Movie ${i}`,
-            // description: `Description of Movie ${i}`,
-            uniqueId: `movie_${i}`,
-            imageSrc: `https://.com/movie_${i}.jpg`,
-            trailerLink: `https://www.youtube.com/watch?v=trailer_${i}`,
-            availableSlots: slotsData
-        };
-
-        movies.push(movie);
+// Function to convert an image to Base64
+const imageToBase64 = (filePath) => {
+    try {
+        const file = fs.readFileSync(filePath);
+        return file.toString('base64');
+    } catch (err) {
+        console.error(`Error converting ${filePath} to Base64:`, err);
+        return null;
     }
-    return movies;
+};
+
+// Function to upload images and update movie data
+const uploadImages = async () => {
+    const imageDirectory = 'C:\\Users\\hp\\Downloads\\Images for Website'; // Updated directory containing the images
+    const movieFiles = fs.readdirSync(imageDirectory); // Read files in the directory
+
+    // Filter out only .jpg files
+    const imageFiles = movieFiles.filter(file => path.extname(file).toLowerCase() === '.jpg');
+
+    const movies = []; // Store movie data
+
+    imageFiles.forEach((file, index) => {
+        const imagePath = path.join(imageDirectory, file);
+        const base64Image = imageToBase64(imagePath);
+
+        if (base64Image) {
+            const movie = {
+                title: `Movie ${index + 1}`,
+                uniqueId: `movie_${index + 1}`,
+                imageSrc: base64Image,
+                trailerLink: `https://www.youtube.com/watch?v=trailer_${index + 1}`,
+                availableSlots: generateMovieSlotsData()
+            };
+
+            movies.push(movie);
+        }
+    });
+
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, { bufferCommands: false });
+        console.log('Connected to MongoDB');
+
+        // Clear existing data
+        await Movie.deleteMany({});
+
+        // Insert new data
+        await Movie.insertMany(movies);
+
+        console.log('Images and movie data have been uploaded to MongoDB.');
+    } catch (error) {
+        console.error('Error uploading images:', error);
+    } finally {
+        mongoose.disconnect();
+    }
+};
+
+// Function to generate slots data
+const generateMovieSlotsData = () => {
+    const slotsData = [];
+    for (let j = 0; j < 3; j++) {
+        const date = new Date();
+        date.setDate(date.getDate() + j); // Increment date for each day
+        const slots = {
+            date: date.toISOString(),
+            timeSlots: [
+                { timeSlot: '11:00 AM', seats: generateSeatsData(100) },
+                { timeSlot: '02:00 PM', seats: generateSeatsData(100) },
+                { timeSlot: '06:00 PM', seats: generateSeatsData(100) }
+            ]
+        };
+        slotsData.push(slots);
+    }
+    return slotsData;
 };
 
 // Function to generate seats data
@@ -54,11 +88,11 @@ const generateSeatsData = (count) => {
     const seatsPerRow = 10;
     const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']; // Define rows
     for (let i = 0; i < count; i++) {
-        const seatNumber = ((i % seatsPerRow) + 1); // Calculate seat number in cyclical pattern from 1 to 10
-        const row = rows[Math.floor(i / seatsPerRow)]; // Assign row based on index
+        const seatNumber = ((i % seatsPerRow) + 1);
+        const row = rows[Math.floor(i / seatsPerRow)];
         const seat = {
-            seatNumber: `${seatNumber}`, // Combine row and seat number
-            seatRow: row, // Assign row
+            seatNumber: `${seatNumber}`,
+            seatRow: row,
             available: true
         };
         seats.push(seat);
@@ -66,31 +100,5 @@ const generateSeatsData = (count) => {
     return seats;
 };
 
-(async () => {
-    try {
-        await mongoose.connect(process.env.MONGODB_URI, {
-            bufferCommands: false
-        });
-        console.log('Connected to MongoDB');
-
-        // Generate JSON data
-        const newMoviesData = generateMovieData();
-
-        // Clear existing data
-        await Movie.deleteMany({}); // Deletes all existing documents
-
-        // Insert new data
-        await Movie.insertMany(newMoviesData);
-
-        // Write JSON data to a file
-        const jsonData = JSON.stringify(newMoviesData, null, 2);
-        fs.writeFileSync(path.join(__dirname, 'movie_data.json'), jsonData, 'utf-8');
-
-        console.log('Movie data has been updated in the "movies" collection and movie_data.json file.');
-
-    } catch (error) {
-        console.error('Error:', error);
-    } finally {
-        mongoose.disconnect();
-    }
-})();
+// Run the script
+uploadImages();
