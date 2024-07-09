@@ -17,7 +17,7 @@ const UserBookings = () => {
 
   const fetchBookings = async (userId) => {
     try {
-      const { data } = await axios.get(`https://ticket-booking-backend-rylx.onrender.com/api/bookings/${userId}`);
+      const { data } = await axios.get(`moviebooking.eu-north-1.elasticbeanstalk.com/api/bookings/${userId}`);
       setBookings(data.bookings);
     } catch (error) {
       console.error('Error fetching bookings:', error);

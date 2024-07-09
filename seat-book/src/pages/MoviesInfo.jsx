@@ -14,7 +14,7 @@ function MovieInfo() {
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
-        const response = await axios.get(`https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}`);
+        const response = await axios.get(`moviebooking.eu-north-1.elasticbeanstalk.com/movies/${movieId}`);
         setMovie(response.data.movie);
       } catch (error) {
         console.error("Error fetching movie data:", error);

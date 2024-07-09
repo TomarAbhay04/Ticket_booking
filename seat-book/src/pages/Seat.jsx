@@ -63,7 +63,7 @@ function Seat() {
 
     try {
       const response = await axios.get(
-        `https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}/timeslots/${date}`
+        `moviebooking.eu-north-1.elasticbeanstalk.com/movies/${movieId}/timeslots/${date}`
       );
       const timeSlots = response.data.timeSlots;
 

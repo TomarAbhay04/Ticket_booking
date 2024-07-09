@@ -63,7 +63,7 @@ const Cart = () => {
         },
         handler: async (response) => {
           try {
-            const verificationResponse = await axios.post('https://ticket-booking-backend-rylx.onrender.com/api/paymentverification', {
+            const verificationResponse = await axios.post('moviebooking.eu-north-1.elasticbeanstalk.com/api/paymentverification', {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,

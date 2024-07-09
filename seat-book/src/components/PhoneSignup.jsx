@@ -71,7 +71,7 @@ const PhoneSignUp = () => {
   const registerUser = async (userData) => {
     try {
       // Send user data to your backend (Node.js) to save in MongoDB
-      const response = await fetch('https://ticket-booking-backend-rylx.onrender.com/api/register', {
+      const response = await fetch('moviebooking.eu-north-1.elasticbeanstalk.com/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
