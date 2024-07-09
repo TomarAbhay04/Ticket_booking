@@ -11,7 +11,7 @@ function MovieCard() {
   const sliderRef = useRef(null); // Ref to control the slider
 
   useEffect(() => {
-    axios.get('https://ticket-booking-backend-rylx.onrender.com/movies')
+    axios.get('moviebooking.eu-north-1.elasticbeanstalk.com/movies')
       .then(response => {
         setMovies(response.data.movies);
         setLoading(false); // Set loading to false when data is fetched
