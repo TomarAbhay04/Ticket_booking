@@ -12,8 +12,8 @@ const Home = () => {
 //   navigate('/seat');
 // };
   return (
-    <div className="bg-gray-100 overflow-y-hidden">
-      <Navbar />
+    <div className="bg-gray-300 overflow-y-hidden">
+      {/* <Navbar /> */}
       {/* Hero Section */}
 
       {/* Carousel Section */}
@@ -45,7 +45,7 @@ const Home = () => {
 
       {/* Footer Section */}
 
-      <Footer />
+      {/* <Footer /> */}
       {/* <footer className="bg-gray-800 text-white p-4 mt-8"> */}
         {/* Footer content */}
         {/* Include links to important pages, social media icons, and contact information */}

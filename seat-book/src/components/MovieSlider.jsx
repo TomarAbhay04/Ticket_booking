@@ -10,7 +10,7 @@ function MovieCarousel() {
   const [loading, setLoading] = useState(true); // State for loading
 
   useEffect(() => {
-    axios.get('moviebooking.eu-north-1.elasticbeanstalk.com/movies')
+    axios.get('http://localhost:4000/movies')
       .then(response => {
         setMovies(response.data.movies);
         setLoading(false); // Set loading to false when data is fetched

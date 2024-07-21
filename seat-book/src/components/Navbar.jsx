@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../context/UserAuthContext';
 import ProfileSidebar from './ProfileSidebar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons'; // Import the profile icon
 
 const Navbar = () => {
   const { user, logOut } = useUserAuth();
@@ -29,14 +31,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 p-4 relative z-10">
+    <nav className="bg-gray-100  p-4 relative z-10">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-white font-bold text-lg">YourLogo</div>
+        <div className="text-black font-roboto font-bold text-lg">YourLogo</div>
 
         {/* Mobile Menu Toggle Button */}
         <button
-          className="lg:hidden text-white focus:outline-none"
+          className="lg:hidden text-black focus:outline-none"
           onClick={toggleMobileMenu}
         >
           {isMobileMenuOpen ? 'Close' : 'Menu'}
@@ -44,14 +46,14 @@ const Navbar = () => {
 
         {/* Navigation Links (Hidden on Mobile) */}
         <div className="hidden lg:flex items-center space-x-8">
-          <Link to="/movies" className="text-white hover:text-gray-300">
+          <Link to="/movies" className="text-black font-bold font-roboto hover:text-gray-300">
             Movies
           </Link>
-          <Link to="/about-us" className="text-white hover:text-gray-300">
+          <Link to="/aboutus" className="text-black font-bold font-roboto hover:text-gray-300">
             About Us
           </Link>
-          <Link to="/advertise-with-us" className="text-white hover:text-gray-300">
-            Advertise With Us
+          <Link to="/applyforfranchise" className="text-black font-bold font-roboto hover:text-gray-300">
+            Apply For Franchise
           </Link>
         </div>
 
@@ -61,7 +63,7 @@ const Navbar = () => {
             <Link to="/movies" className="block text-white py-2 hover:text-gray-300">
               Movies
             </Link>
-            <Link to="/about-us" className="block text-white py-2 hover:text-gray-300">
+            <Link to="/aboutus" className="block text-white py-2 hover:text-gray-300">
               About Us
             </Link>
             <Link to="/advertise-with-us" className="block text-white py-2 hover:text-gray-300">
@@ -72,8 +74,13 @@ const Navbar = () => {
 
         {/* Profile Section */}
         <div className="flex items-center space-x-4">
+          <FontAwesomeIcon
+            icon={faUserCircle}
+            className="text-black text-2xl cursor-pointer"
+            onClick={handleProfileClick}
+          />
           <span
-            className="text-white cursor-pointer hover:text-gray-300"
+            className="text-black font-roboto font-bold cursor-pointer hover:text-gray-300"
             onClick={handleProfileClick}
           >
             {user ? user.displayName || user.phoneNumber : "Guest"}

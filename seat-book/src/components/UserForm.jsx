@@ -17,7 +17,7 @@ const UserForm = () => {
     e.preventDefault();
     try {
       console.log('Submitting form data:', formData); // Log payload before sending
-      const response = await axios.post('moviebooking.eu-north-1.elasticbeanstalk.com/api/user', formData);
+      const response = await axios.post('http://localhost:4000/api/user', formData);
       alert('User created successfully');
       console.log(response.data);
     } catch (error) {

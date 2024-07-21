@@ -1,13 +1,12 @@
-import { createContext, useContext, useEffect, useState} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
-  // createUserWithEmailAndPassword,
-  // signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
   GoogleAuthProvider,
-  signInWithPopup,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
+  signInWithPopup
+  
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -16,12 +15,12 @@ const userAuthContext = createContext();
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({});
 
-  // function logIn(email, password) {
-  //   return signInWithEmailAndPassword(auth, email, password);
-  // }
-  // function signUp(email, password) {
-  //   return createUserWithEmailAndPassword(auth, email, password);
-  // }
+  function logIn(email, password) {
+    return signInWithEmailAndPassword(auth, email, password);
+  }
+  function signUp(email, password) {
+    return createUserWithEmailAndPassword(auth, email, password);
+  }
   function logOut() {
     return signOut(auth);
   }
@@ -30,17 +29,7 @@ export function UserAuthContextProvider({ children }) {
     return signInWithPopup(auth, googleAuthProvider);
   }
 
-  function setUpRecaptcha(number){
-    const recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      'recaptcha-container',
-     {},
-      
-    );
-    recaptchaVerifier.render();
-    return signInWithPhoneNumber(auth, number, recaptchaVerifier);
-  };
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       console.log("Auth", currentuser);
@@ -54,7 +43,7 @@ export function UserAuthContextProvider({ children }) {
 
   return (
     <userAuthContext.Provider
-      value={{ googleSignIn, user, logOut, setUpRecaptcha }}
+      value={{ user, logIn, signUp, logOut, googleSignIn}}
     >
       {children}
     </userAuthContext.Provider>

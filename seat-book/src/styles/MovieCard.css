@@ -1,0 +1,41 @@
+/* MovieCard.css */
+.relative {
+    position: relative;
+}
+
+.slider-item-container {
+    position: relative;
+}
+
+.custom-slider-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(153, 153, 153);
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    z-index: 10; /* Ensure buttons are above the slider */
+}
+
+.prev-slide-button {
+    left: -25px;
+    top: 42%;
+    transform: translateY(-50%);
+}
+
+.next-slide-button {
+    right: -25px;
+    top: 42%;
+    transform: translateY(-50%);
+}
+
+.custom-slider-button svg {
+    width: 18px;
+    height: 18px;
+    fill: #FFFFFF;
+}

@@ -13,19 +13,19 @@ function Seat() {
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [seatsData, setSeatsData] = useState([]);
   const [hoveredSeat, setHoveredSeat] = useState(null);
-  const [isLoadingSeats, setIsLoadingSeats] = useState(true); // Loading state for seats
-  const [isLoadingTimeSlots, setIsLoadingTimeSlots] = useState(false); // Loading state for time slots
+  const [isLoadingSeats, setIsLoadingSeats] = useState(true);
+  const [isLoadingTimeSlots, setIsLoadingTimeSlots] = useState(false);
   const { movieId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectedMovie, movieTitle, movieImage} = location.state || {};
+  const { selectedMovie, movieTitle, movieImage } = location.state || {};
 
   useEffect(() => {
     const fetchSeatsData = async () => {
-      setIsLoadingSeats(true); // Start loading seats
+      setIsLoadingSeats(true);
       try {
         const response = await axios.get(
-          `https://ticket-booking-backend-rylx.onrender.com/movies/${movieId}`
+          `http://localhost:4000/movies/${movieId}`
         );
         const movie = response.data.movie;
         if (movie) {
@@ -47,7 +47,7 @@ function Seat() {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setIsLoadingSeats(false); // End loading seats
+        setIsLoadingSeats(false);
       }
     };
 
@@ -55,15 +55,15 @@ function Seat() {
   }, [movieId]);
 
   const handleSelect = async (date, timeSlot = null) => {
-    setIsLoadingTimeSlots(true); // Start loading time slots
-    setIsLoadingSeats(true); // Start loading seats
+    setIsLoadingTimeSlots(true);
+    setIsLoadingSeats(true);
     setSelectedDate(date);
     setSelectedTimeSlot(timeSlot);
-    setSelectedSeats([]); // Clear selected seats
+    setSelectedSeats([]);
 
     try {
       const response = await axios.get(
-        `moviebooking.eu-north-1.elasticbeanstalk.com/movies/${movieId}/timeslots/${date}`
+        `http://localhost:4000/movies/${movieId}/timeslots/${date}`
       );
       const timeSlots = response.data.timeSlots;
 
@@ -81,8 +81,8 @@ function Seat() {
     } catch (error) {
       console.error("Error fetching time slots:", error);
     } finally {
-      setIsLoadingTimeSlots(false); // End loading time slots
-      setIsLoadingSeats(false); // End loading seats
+      setIsLoadingTimeSlots(false);
+      setIsLoadingSeats(false);
     }
   };
 
@@ -121,16 +121,16 @@ function Seat() {
   };
 
   const handleSeatHover = (seatId) => {
-    setHoveredSeat(seatId); // Set the currently hovered seat ID
+    setHoveredSeat(seatId);
   };
 
   const handleSeatLeave = () => {
-    setHoveredSeat(null); // Reset the currently hovered seat ID
+    setHoveredSeat(null);
   };
 
   const renderSeats = () => {
     if (isLoadingSeats) {
-      return <Loader />; // Show loader while loading seats
+      return <Loader />;
     }
 
     if (seatsData.length === 0) {
@@ -138,9 +138,8 @@ function Seat() {
     }
 
     const seatsRows = [];
-    const rows = {}; // Object to group seats by row
+    const rows = {};
 
-    // Group seats by row
     seatsData.forEach((seat) => {
       if (!rows[seat.seatRow]) {
         rows[seat.seatRow] = [];
@@ -148,7 +147,6 @@ function Seat() {
       rows[seat.seatRow].push(seat);
     });
 
-    // Iterate through each row and render seat buttons
     Object.keys(rows).forEach((row) => {
       const rowSeats = rows[row];
       seatsRows.push(
@@ -156,16 +154,15 @@ function Seat() {
           <div className="mr-8 font-medium items-center text-md text-gray-400 ">
             {row}
           </div>{" "}
-          {/* Display row label */}
           {rowSeats.map((seat) => (
             <button
               key={seat._id}
               className={`seat w-7 h-7 mb-1 mx-2 p-2 rounded-md flex items-center justify-center text-xs ${
                 !seat.available 
-                  ? "bg-gray-400" // Booked seats
+                  ? "bg-gray-300"
                   : selectedSeats.includes(seat._id)
-                  ? "bg-green-500 text-white" // Selected seats
-                  : "bg-white border border-black text-transparent hover:bg-green-500 hover:text-white" // Available seats
+                  ? "bg-gray-800 text-white"
+                  : "bg-white border border-black text-transparent hover:bg-gray-800 hover:text-white"
               }`}
               disabled={!seat.available}
               onClick={() => handleSeatClick(seat._id)}
@@ -185,9 +182,9 @@ function Seat() {
   const totalPayment = selectedSeats.length * 150;
 
   return (
-    <div className="container mx-auto mt-8">
-      <h1 className="text-xl my-2 text-center"> {movieTitle}</h1>
-      <div className="flex justify-center ">
+    <div className="relative container mx-auto mt-4 pb-16">
+      <h1 className="text-xl my-2 text-center">{movieTitle}</h1>
+      <div className="flex justify-center">
         <div className="mr-4">
           <h2 className="text-md font-semibold mb-2">Select Date:</h2>
           <div className="flex flex-wrap">
@@ -196,7 +193,7 @@ function Seat() {
                 key={date}
                 className={`px-3 py-1 rounded-full mr-2 mb-2 ${
                   selectedDate === date
-                    ? "bg-green-500 text-black"
+                    ? "bg-gray-800 text-white"
                     : "bg-white border border-black text-black"
                 }`}
                 onClick={() => handleDateSelect(date)}
@@ -215,9 +212,9 @@ function Seat() {
               availableTimeSlots.map((timeSlot) => (
                 <button
                   key={timeSlot}
-                  className={` px-3 py-1 rounded-full mr-2 mb-2 ${
+                  className={`px-3 py-1 rounded-full mr-2 mb-2 ${
                     selectedTimeSlot === timeSlot
-                      ? "bg-green-500 text-black"
+                      ? "bg-gray-800 text-white"
                       : "bg-white border border-black text-black"
                   }`}
                   onClick={() => handleTimeSlotSelect(timeSlot)}
@@ -230,21 +227,31 @@ function Seat() {
         </div>
       </div>
 
-      <div className="container mx-auto mt-8 flex justify-center items-center">
-        <div className="screen mb-4"></div>
+      <div className="container mx-auto mt-8 flex flex-col items-center">
         <div className="flex flex-col space-y-3">
           {renderSeats()}
-          {selectedSeats.length > 0 && (
-            <div className="text-center mt-4">
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded-md"
-                onClick={handleCart}
-              >
-                Pay ₹{totalPayment}
-              </button>
-            </div>
-          )}
         </div>
+      </div>
+
+      {selectedSeats.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-800 text-white text-center py-2 z-10">
+          <button
+            className="font-extrabold px-4 py-2 rounded-md "
+            onClick={handleCart}
+          >
+            Pay ₹{totalPayment}
+          </button>
+        </div>
+      )}
+
+      <div className="relative bottom-0 left-0 right-0 top-10 flex justify-center mb-14 z-0">
+        <img
+          src="https://assetscdn1.paytm.com/movies_new/_next/static/media/screen-icon.8dd7f126.svg"
+          alt="Movies Screen Icon"
+          width="375"
+          height="44"
+          className="object-contain"
+        />
       </div>
     </div>
   );

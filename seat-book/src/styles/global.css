@@ -1,0 +1,58 @@
+/* src/styles/global.css */
+
+/* Custom classes */
+.movie-info-container {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay for readability */
+  color: #ffffff; /* Text color */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  z-index: 1; /* Ensure the overlay is below the content but above the background image */
+}
+
+/* Tailwind CSS classes */
+.bg-gray-800 {
+  background-color: #2d3748; /* Gray-800 background color */
+}
+
+.border-gray-800 {
+  border-color: #2d3748; /* Gray-800 border color */
+}
+
+.bg-cover {
+  background-size: cover; /* Cover the full width and height */
+}
+
+.bg-center {
+  background-position: center; /* Center the background image */
+}
+
+.flex {
+  display: flex; /* Flexbox layout */
+}
+
+.flex-col {
+  flex-direction: column; /* Stack items vertically */
+}
+
+.items-center {
+  align-items: center; /* Center items horizontally */
+}
+
+.p-4 {
+  padding: 1rem; /* Padding */
+}
+
+.min-h-screen {
+  min-height: 100vh; /* Full viewport height */
+}
+
+.max-w-4xl {
+  max-width: 4xl; /* Maximum width for the content */
+}
