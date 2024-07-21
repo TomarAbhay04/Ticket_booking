@@ -25,7 +25,7 @@ const UserBookings = () => {
 
   const fetchBookings = async (userId) => {
     try {
-      const { data } = await axios.get(`http://localhost:4000/api/bookings/${userId}`);
+      const { data } = await axios.get(`https://server-1-yqmm.onrender.com/api/bookings/${userId}`);
       console.log('Fetched bookings:', data.bookings);
       setBookings(data.bookings);
     } catch (error) {

@@ -1,3 +1,4 @@
+// MovieCard.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -12,7 +13,7 @@ function MovieCard() {
   const sliderRef = useRef(null); // Ref to control the slider
 
   useEffect(() => {
-    axios.get('http://localhost:4000/movies')
+    axios.get('https://server-1-yqmm.onrender.com/movies')
       .then(response => {
         setMovies(response.data.movies);
         setLoading(false); // Set loading to false when data is fetched
@@ -71,21 +72,20 @@ function MovieCard() {
   };
 
   return (
-    <div className="relative max-w-screen-lg mt-10 mx-auto  ">
-      <Slider {...settings} ref={sliderRef} className="">
+    <div className="relative max-w-screen-lg mt-10 mx-auto">
+      <Slider {...settings} ref={sliderRef}>
         {movies.map((movie) => (
-          <div key={movie.uniqueId} className="relative rounded-lg overflow-hidden shadow-lg px-4"> //
+          <div key={movie.uniqueId} className="relative rounded-lg overflow-hidden shadow-lg p-2">
             <div className="slider-item-container relative">
               <Link to={`/movie/${movie.uniqueId}`} className="block">
                 <img
                   src={`data:image/jpeg;base64,${movie.imageSrc}`}
                   alt={movie.title}
-                  className="w-full h-80 object-cover rounded-lg"
+                  className="w-full h-64 sm:h-80 object-cover rounded-lg"
                 />
-                <div className="p-4">
-                  <h2 className="text-xl font-bold mb-2">{movie.title}</h2>
-                  {/* <p className="text-gray-700">{movie.description}</p> */}
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full block w-1/3 text-center text-sm mt-2">
+                <div className="p-2 sm:p-4">
+                  <h2 className="text-lg sm:text-xl font-bold mb-2">{movie.title}</h2>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full block w-full sm:w-1/3 text-center text-sm mt-2">
                     Book Ticket
                   </button>
                 </div>
