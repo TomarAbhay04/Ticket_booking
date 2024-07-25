@@ -34,7 +34,7 @@ const Navbar = () => {
     <nav className="bg-gray-100  p-4 relative z-10">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-black font-roboto font-bold text-lg">YourLogo</div>
+        <div className="text-black font-roboto font-bold text-lg">Tomar Abhay</div>
 
         {/* Mobile Menu Toggle Button */}
         <button
