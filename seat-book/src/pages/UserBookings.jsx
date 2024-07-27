@@ -27,7 +27,12 @@ const UserBookings = () => {
     try {
       const { data } = await axios.get(`https://server-1-yqmm.onrender.com/api/bookings/${userId}`);
       console.log('Fetched bookings:', data.bookings);
-      setBookings(data.bookings);
+      setBookings(prevBookings => {
+        if (JSON.stringify(prevBookings) !== JSON.stringify(data.bookings)) {
+          return data.bookings;
+        }
+        return prevBookings;
+      });
     } catch (error) {
       console.error('Error fetching bookings:', error);
       setError('Failed to fetch bookings.');
@@ -42,6 +47,9 @@ const UserBookings = () => {
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
       </div>
     );
+  }
+  if(error){
+    return <div className='container mx-auto p-4 text-red-500'>{error}</div>
   }
 
   return (

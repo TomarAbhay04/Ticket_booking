@@ -14,6 +14,7 @@ import Movie from './Movies.jsx';
 import AboutUs from './AboutUs.jsx';
 import HelpAndSupport from './HelpAndSupport.jsx';
 import ApplyForFranchise from './ApplyForFranchise.jsx';
+import MovieSlider from '../components/MovieSlider.jsx';  
 
 
 

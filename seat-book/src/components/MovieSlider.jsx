@@ -70,7 +70,7 @@ function MovieCarousel() {
                 <img
                   src={`data:image/jpeg;base64,${movie.imageSrc}`}
                   alt={movie.title}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0  object-cover"
                 />
               </div>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-2 rounded-full absolute bottom-4 left-1/2 transform -translate-x-1/2">
