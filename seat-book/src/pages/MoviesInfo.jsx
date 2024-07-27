@@ -13,7 +13,7 @@ function MovieInfo() {
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
-        const response = await axios.get(`https://server-1-yqmm.onrender.com/movies/${movieId}`);
+        const response = await axios.get(`https://ticket-booking-tl5b.onrender.com/movies/${movieId}`);
         setMovie(response.data.movie);
       } catch (error) {
         console.error("Error fetching movie data:", error);

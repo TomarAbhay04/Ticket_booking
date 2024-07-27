@@ -38,9 +38,9 @@ const Cart = () => {
         movieTitle,
       };
 
-      const { data: { key } } = await axios.get('https://server-1-yqmm.onrender.com/api/getkey');
+      const { data: { key } } = await axios.get('https://ticket-booking-tl5b.onrender.com/api/getkey');
 
-      const { data: { order } } = await axios.post('https://server-1-yqmm.onrender.com/api/checkout', payload);
+      const { data: { order } } = await axios.post('https://ticket-booking-tl5b.onrender.com/api/checkout', payload);
 
       const options = {
         key,
@@ -63,7 +63,7 @@ const Cart = () => {
         },
         handler: async (response) => {
           try {
-            const verificationResponse = await axios.post('https://server-1-yqmm.onrender.com/api/paymentverification', {
+            const verificationResponse = await axios.post('https://ticket-booking-tl5b.onrender.com/api/paymentverification', {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,

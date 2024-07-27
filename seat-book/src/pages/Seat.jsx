@@ -25,7 +25,7 @@ function Seat() {
       setIsLoadingSeats(true);
       try {
         const response = await axios.get(
-          `https://server-1-yqmm.onrender.com/movies/${movieId}`
+          `https://ticket-booking-tl5b.onrender.com/movies/${movieId}`
         );
         const movie = response.data.movie;
         if (movie) {
@@ -63,7 +63,7 @@ function Seat() {
 
     try {
       const response = await axios.get(
-        `https://server-1-yqmm.onrender.com/movies/${movieId}/timeslots/${date}`
+        `https://ticket-booking-tl5b.onrender.com/movies/${movieId}/timeslots/${date}`
       );
       const timeSlots = response.data.timeSlots;
 

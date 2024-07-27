@@ -10,7 +10,7 @@ function MovieCarousel() {
   const [loading, setLoading] = useState(true); // State for loading
 
   useEffect(() => {
-    axios.get('https://server-1-yqmm.onrender.com/movies')
+    axios.get('https://ticket-booking-tl5b.onrender.com/movies')
       .then(response => {
         setMovies(response.data.movies);
         setLoading(false); // Set loading to false when data is fetched
