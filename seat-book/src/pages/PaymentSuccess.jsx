@@ -1,8 +1,9 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa'; // For a check icon
 
 const PaymentSuccess = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const reference = searchParams.get('reference');
@@ -22,13 +23,13 @@ const PaymentSuccess = () => {
         </div>
         <div className="text-center space-y-4 space-x-4">
           <button 
-            onClick={() => window.location.href = '/'} 
+            onClick={() => navigate('/')} 
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
           >
             Go to Home
           </button>
           <button 
-            onClick={() => window.location.href = '/orders'} 
+            onClick={() => navigate('/orders')} 
             className="bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-900 transition duration-300"
           >
             Check Your Bookings

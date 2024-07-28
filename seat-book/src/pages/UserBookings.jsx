@@ -13,6 +13,7 @@ const UserBookings = () => {
   useEffect(() => {
     if (user) {
       fetchBookings(user.uid);
+      console.log('User:', user.uid);
     }
   }, [user]);
 

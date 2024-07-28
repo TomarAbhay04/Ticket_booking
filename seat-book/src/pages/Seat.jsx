@@ -4,6 +4,7 @@ import axios from "axios";
 import { formatDisplayDate } from "../utils/dateUtils";
 import Loader from '../components/Loader';
 import "../styles/loader.css";
+import '../styles/Seat.css';
 
 function Seat() {
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -58,7 +59,7 @@ function Seat() {
     setIsLoadingTimeSlots(true);
     setIsLoadingSeats(true);
     setSelectedDate(date);
-    setSelectedTimeSlot(timeSlot);
+    // setSelectedTimeSlot(timeSlot);
     setSelectedSeats([]);
 
     try {
@@ -70,12 +71,15 @@ function Seat() {
       if (timeSlots.length > 0) {
         const times = timeSlots.map((slot) => slot.timeSlot);
         setAvailableTimeSlots(times);
-        const selectedTimeSlotData = timeSlot
-          ? timeSlots.find((slot) => slot.timeSlot === timeSlot)
-          : timeSlots[0];
-        const seatsForSelectedSlot = selectedTimeSlotData.seats;
-        setSeatsData(seatsForSelectedSlot);
-      } else {
+
+        // Set the first time slot as selected if no time slot is provided
+        const newSelectedTimeSlot = timeSlot ? timeSlot : times[0];
+      setSelectedTimeSlot(newSelectedTimeSlot);
+
+      const selectedTimeSlotData = timeSlots.find((slot) => slot.timeSlot === newSelectedTimeSlot);
+      const seatsForSelectedSlot = selectedTimeSlotData ? selectedTimeSlotData.seats : [];
+      setSeatsData(seatsForSelectedSlot);
+    }  else {
         console.log("No time slots available for selected date.");
       }
     } catch (error) {
@@ -150,8 +154,8 @@ function Seat() {
     Object.keys(rows).forEach((row) => {
       const rowSeats = rows[row];
       seatsRows.push(
-        <div key={row} className="flex justify-center mb-1">
-          <div className="mr-8 font-medium items-center text-md text-gray-400 ">
+        <div key={row} className="flex justify-center mb-1 msv">
+          <div className="mr-4 font-medium items-center text-md text-gray-400 msv-2 ">
             {row}
           </div>{" "}
           {rowSeats.map((seat) => (
@@ -184,8 +188,8 @@ function Seat() {
   return (
     <div className="relative container mx-auto mt-4 pb-16">
       <h1 className="text-xl my-2 text-center">{movieTitle}</h1>
-      <div className="flex justify-center">
-        <div className="mr-4">
+      <div className="flex justify-center ">
+        <div className="mr-4 date-selection">
           <h2 className="text-md font-semibold mb-2">Select Date:</h2>
           <div className="flex flex-wrap">
             {availableDates.map((date) => (
@@ -203,9 +207,9 @@ function Seat() {
             ))}
           </div>
         </div>
-        <div>
-          <h2 className="text-md font-semibold mb-2">Select Time Slot:</h2>
-          <div className="flex flex-wrap">
+        <div className="time-section">
+          <h2 className="text-md font-semibold mb-2 ">Select Time Slot:</h2>
+          <div className="flex flex-wrap ">
             {isLoadingTimeSlots ? (
               <Loader />
             ) : (
@@ -227,7 +231,7 @@ function Seat() {
         </div>
       </div>
 
-      <div className="container mx-auto mt-8 flex flex-col items-center">
+      <div className="container mx-auto mt-8 flex flex-col items-center seat-layout">
         <div className="flex flex-col space-y-3">
           {renderSeats()}
         </div>
