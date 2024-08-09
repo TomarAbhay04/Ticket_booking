@@ -4,6 +4,7 @@ import { useUserAuth } from '../context/UserAuthContext';
 import ProfileSidebar from './ProfileSidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons'; // Import the profile icon
+import '../styles/home.css'
 
 const Navbar = () => {
   const { user, logOut } = useUserAuth();
@@ -32,9 +33,9 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-100  p-4 relative z-10">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="container mx-auto flex justify-between items-center navbar ">
         {/* Logo */}
-        <div className="text-black font-roboto font-bold text-lg">Tomar Abhay</div>
+        <div className="text-black font-roboto font-bold text-lg logo">Your Logo</div>
 
         {/* Mobile Menu Toggle Button */}
         <button
@@ -73,7 +74,7 @@ const Navbar = () => {
         )}
 
         {/* Profile Section */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 ">
           <FontAwesomeIcon
             icon={faUserCircle}
             className="text-black text-2xl cursor-pointer"

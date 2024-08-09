@@ -59,7 +59,6 @@ function Seat() {
     setIsLoadingTimeSlots(true);
     setIsLoadingSeats(true);
     setSelectedDate(date);
-    // setSelectedTimeSlot(timeSlot);
     setSelectedSeats([]);
 
     try {
@@ -72,14 +71,13 @@ function Seat() {
         const times = timeSlots.map((slot) => slot.timeSlot);
         setAvailableTimeSlots(times);
 
-        // Set the first time slot as selected if no time slot is provided
         const newSelectedTimeSlot = timeSlot ? timeSlot : times[0];
-      setSelectedTimeSlot(newSelectedTimeSlot);
+        setSelectedTimeSlot(newSelectedTimeSlot);
 
-      const selectedTimeSlotData = timeSlots.find((slot) => slot.timeSlot === newSelectedTimeSlot);
-      const seatsForSelectedSlot = selectedTimeSlotData ? selectedTimeSlotData.seats : [];
-      setSeatsData(seatsForSelectedSlot);
-    }  else {
+        const selectedTimeSlotData = timeSlots.find((slot) => slot.timeSlot === newSelectedTimeSlot);
+        const seatsForSelectedSlot = selectedTimeSlotData ? selectedTimeSlotData.seats : [];
+        setSeatsData(seatsForSelectedSlot);
+      } else {
         console.log("No time slots available for selected date.");
       }
     } catch (error) {
@@ -154,28 +152,30 @@ function Seat() {
     Object.keys(rows).forEach((row) => {
       const rowSeats = rows[row];
       seatsRows.push(
-        <div key={row} className="flex justify-center mb-1 msv">
-          <div className="mr-4 font-medium items-center text-md text-gray-400 msv-2 ">
+        <div key={row} className="flex justify-center mb-1">
+          <div className="mr-2 font-medium items-center text-xs text-gray-400">
             {row}
-          </div>{" "}
-          {rowSeats.map((seat) => (
-            <button
-              key={seat._id}
-              className={`seat w-7 h-7 mb-1 mx-2 p-2 rounded-md flex items-center justify-center text-xs ${
-                !seat.available 
-                  ? "bg-gray-300"
-                  : selectedSeats.includes(seat._id)
-                  ? "bg-gray-800 text-white"
-                  : "bg-white border border-black text-transparent hover:bg-gray-800 hover:text-white"
-              }`}
-              disabled={!seat.available}
-              onClick={() => handleSeatClick(seat._id)}
-              onMouseEnter={() => handleSeatHover(seat._id)}
-              onMouseLeave={() => handleSeatLeave(seat._id)}
-            >
-              {!seat.available || !selectedSeats.includes(seat._id) ? "" : seat.seatNumber}
-            </button>
-          ))}
+          </div>
+          <div className="flex">
+            {rowSeats.map((seat) => (
+              <button
+                key={seat._id}
+                className={`seat w-6 h-6 mb-1 mx-1 p-1 rounded-sm flex items-center justify-center text-xs ${
+                  !seat.available 
+                    ? "bg-gray-300"
+                    : selectedSeats.includes(seat._id)
+                    ? "bg-gray-800 text-white"
+                    : "bg-white border border-black text-transparent hover:bg-gray-800 hover:text-white"
+                }`}
+                disabled={!seat.available}
+                onClick={() => handleSeatClick(seat._id)}
+                onMouseEnter={() => handleSeatHover(seat._id)}
+                onMouseLeave={() => handleSeatLeave(seat._id)}
+              >
+                {!seat.available || !selectedSeats.includes(seat._id) ? "" : seat.seatNumber}
+              </button>
+            ))}
+          </div>
         </div>
       );
     });
@@ -186,16 +186,16 @@ function Seat() {
   const totalPayment = selectedSeats.length * 150;
 
   return (
-    <div className="relative container mx-auto mt-4 pb-16">
+    <div className="relative container mx-auto mt-4 pb-16 seat-container">
       <h1 className="text-xl my-2 text-center">{movieTitle}</h1>
-      <div className="flex justify-center ">
+      <div className="flex justify-center flex-wrap">
         <div className="mr-4 date-selection">
           <h2 className="text-md font-semibold mb-2">Select Date:</h2>
           <div className="flex flex-wrap">
             {availableDates.map((date) => (
               <button
                 key={date}
-                className={`px-3 py-1 rounded-full mr-2 mb-2 ${
+                className={`px-2 py-1 rounded-full mr-2 mb-2 text-xs ${
                   selectedDate === date
                     ? "bg-gray-800 text-white"
                     : "bg-white border border-black text-black"
@@ -216,7 +216,7 @@ function Seat() {
               availableTimeSlots.map((timeSlot) => (
                 <button
                   key={timeSlot}
-                  className={`px-3 py-1 rounded-full mr-2 mb-2 ${
+                  className={`px-2 py-1 rounded-full mr-2 mb-2 text-xs ${
                     selectedTimeSlot === timeSlot
                       ? "bg-gray-800 text-white"
                       : "bg-white border border-black text-black"
@@ -232,7 +232,7 @@ function Seat() {
       </div>
 
       <div className="container mx-auto mt-8 flex flex-col items-center seat-layout">
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-col space-y-2">
           {renderSeats()}
         </div>
       </div>

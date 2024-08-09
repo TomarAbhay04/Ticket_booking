@@ -1,0 +1,6 @@
+@media (min-width: 280px) and (max-width: 350px) {
+    .navbar {
+      font-size: 0.875rem; /* Example font size */
+    }
+    
+  }

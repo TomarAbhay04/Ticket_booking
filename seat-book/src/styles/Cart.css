@@ -1,0 +1,90 @@
+.cart-page .container {
+  padding: 0.5rem;
+  background-color: #f5f5f5; /* Light background color to contrast the border */
+  border-radius: 8px; /* Rounded corners for the entire container */
+  border: 2px solid #e0e0e0; /* Subtle border around the container */
+  margin-top: 0.1rem; /* Reduced top margin */
+}
+
+/* Cart Container */
+.cart-page .cart-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  align-items: center;
+}
+
+/* Text styling */
+.cart-page h1 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem; /* Reduced bottom margin for less space */
+  text-align: center;
+   margin-top:0.5rem; /*Reduced top margin for "Booking Cart" */
+}
+
+/* Movie Image styling */
+.cart-page .movie-image-container img {
+  max-width: 70%; /* Adjusted size of the image */
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem; /* Margin below the image */
+}
+
+/* Button styling */
+.cart-page button {
+  background-color: #333;
+  color: white;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-page button:disabled {
+  background-color: #888;
+  cursor: not-allowed;
+}
+
+/* Responsive styles for larger screens */
+@media (min-width: 768px) {
+  .cart-page .cart-container {
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .cart-page .movie-image-container img {
+    width: 50%;
+    height: auto;
+  }
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 420px) {
+  .cart-page .container {
+    padding: 0.5rem;
+    margin-top: 0.1rem; /* Reduced top margin for smaller screens */
+  }
+
+  .cart-page h1 {
+    font-size: 1.75rem;
+    margin-top: 0rem; /* Further reduced top margin */
+  }
+
+  .cart-page .movie-image-container img {
+    width: 60%; /* Slightly smaller image for mobile */
+    height: auto;
+  }
+
+  .cart-page button {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+  }
+}

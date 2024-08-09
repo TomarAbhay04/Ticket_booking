@@ -84,7 +84,7 @@ function MovieCard() {
                   className="w-full h-64 sm:h-80 object-cover rounded-lg"
                 />
                 <div className="p-2 sm:p-4 book">
-                  <h2 className="text-lg sm:text-xl font-bold mb-2">{movie.title}</h2>
+                  <h2 className="text-lg sm:text-xl font-bold mb-2 ">{movie.title}</h2>
                   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full block w-full sm:w-1/3 text-center text-sm mt-2 button">
                     Book Ticket
                   </button>

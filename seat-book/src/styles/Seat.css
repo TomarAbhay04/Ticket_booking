@@ -1,10 +1,54 @@
-@media (max-width: 480px) {
-    .msv {
-        margin: 0 8px; 
-    }
-}
-
-@media (max-width: 420px) {
+.container {
+    padding: 0 1rem;
+  }
   
-
-}
+  .seat-container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .seat-layout {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .seat {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  @media (max-width: 420px) {
+    .seat-container {
+      padding: 0 0.5rem;
+    }
+  
+    .seat-layout {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+  
+    .seat {
+      width: 20px;
+      height: 20px;
+      margin: 2px;
+    }
+  
+    .seat-container .flex .font-medium {
+      font-size: 0.75rem;
+      margin-right: 4px;
+    }
+  
+    .date-selection button,
+    .time-section button {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .seat {
+      width: 18px;
+      height: 18px;
+      margin: 1px;
+    }
+  }
+  

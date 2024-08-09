@@ -130,3 +130,10 @@
         font-size: 1.25rem; /* Adjust font size as needed */
     }
 }
+
+
+@media (min-width: 280px) and (max-width: 350px) {
+    .book h2{
+      font-size: 1.3rem; /* Example font size */
+    }
+  }
